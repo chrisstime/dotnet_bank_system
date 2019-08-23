@@ -73,7 +73,7 @@ namespace bank_system
         {
             string fileContent;
             bool allowAccess = false;
-            StreamReader file = new StreamReader(@"login.txt");
+            StreamReader file = new StreamReader("login.txt");
             while ((fileContent = file.ReadLine()) != null)
             {
                 char delimeterChar = ' ';
