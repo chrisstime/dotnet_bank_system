@@ -34,8 +34,7 @@ namespace bank_system
                 "4. Withdraw\n" +
                 "5. A/C Statement\n" +
                 "6. Delete Account\n" +
-                "7. Exit\n");
-            
+                "7. Exit");
             Console.WriteLine("=================================");
             Console.Write("Enter your choice (1-7): ");
             int cursorPosLeftChoice = Console.CursorLeft;
@@ -48,6 +47,28 @@ namespace bank_system
                 Environment.Exit(0);
 
             Console.ReadKey();
+        }
+
+        public void MenuChoice(int userChoice)
+        {
+            switch (userChoice)
+            {
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    break;
+                case 6:
+                    break;
+                case 7:
+                    Environment.Exit(0);
+                    break;
+            }
         }
     }
 }

@@ -15,6 +15,7 @@ namespace bank_system
         {
             Console.Clear();
 
+            Console.WriteLine("=================================");
             Console.WriteLine("WELCOME TO ONLINE BANKING SYSTEM");
             Console.WriteLine("=================================");
             Console.WriteLine("\tLogin to Start\n");
