@@ -11,7 +11,7 @@ namespace bank_system
     {
         static string userName, passWord;
 
-        public void LoginScreen()
+        public bool LoginScreen()
         {
             Console.Clear();
 
@@ -60,6 +60,7 @@ namespace bank_system
             {
                 Console.WriteLine("Valid Credentials! Press Enter to Continue...");
                 Console.ReadKey();
+                return true;
             }
             else
             {
@@ -67,6 +68,8 @@ namespace bank_system
                 Console.ReadKey();
                 LoginScreen();
             }
+
+            return false;
         }
 
         private bool Authenticate(string userName, string passWord)
@@ -79,7 +82,7 @@ namespace bank_system
                 char delimeterChar = ' ';
                 string[] credentials = fileContent.Split(delimeterChar);
 
-                allowAccess = (credentials[0] == userName && credentials[1] == passWord);
+                allowAccess = String.Equals(credentials[0], userName) && String.Equals(credentials[1], passWord);
             }
             file.Close();
 
