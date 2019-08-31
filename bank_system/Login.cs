@@ -9,68 +9,76 @@ namespace bank_system
 {
     class Login
     {
-        static string userName, passWord;
+        string userName, passWord;
 
         public bool LoginScreen()
         {
             Console.Clear();
 
-            Console.WriteLine("=================================");
-            Console.WriteLine("WELCOME TO ONLINE BANKING SYSTEM");
-            Console.WriteLine("=================================");
-            Console.WriteLine("\tLogin to Start\n");
-
-            Console.Write("Username: ");
-            int cursorPosLeftUserName = Console.CursorLeft;
-            int cursorPosTopUserName = Console.CursorTop;
-
-            Console.Write("\nPassword: ");
-            int cursorPosLeftPwd = Console.CursorLeft;
-            int cursorPosTopPwd = Console.CursorTop;
-
-            /* \n is essential so it doesn't affect the input interface*/
-            Console.WriteLine("\n=================================");
-            Console.SetCursorPosition(cursorPosLeftUserName, cursorPosTopUserName);
-            userName = Console.ReadLine();
-
-            Console.SetCursorPosition(cursorPosLeftPwd, cursorPosTopPwd);
-
-            string passwdChar = "*";
-
             do
             {
-                ConsoleKeyInfo Key = Console.ReadKey(true);
-                if (Key.Key != ConsoleKey.Backspace && Key.Key != ConsoleKey.Enter)
+                Console.Clear();
+
+                Console.WriteLine("=================================");
+                Console.WriteLine("WELCOME TO ONLINE BANKING SYSTEM");
+                Console.WriteLine("=================================");
+                Console.WriteLine("\tLogin to Start\n");
+
+                Console.Write("Username: ");
+                int cursorPosLeftUserName = Console.CursorLeft;
+                int cursorPosTopUserName = Console.CursorTop;
+
+                Console.Write("\nPassword: ");
+                int cursorPosLeftPwd = Console.CursorLeft;
+                int cursorPosTopPwd = Console.CursorTop;
+
+                /* \n is essential so it doesn't affect the input interface*/
+                Console.WriteLine("\n=================================");
+                Console.SetCursorPosition(cursorPosLeftUserName, cursorPosTopUserName);
+                userName = Console.ReadLine();
+
+                Console.SetCursorPosition(cursorPosLeftPwd, cursorPosTopPwd);
+
+                string passwdChar = "*";
+
+                do
                 {
-                    passWord += Key.KeyChar;
-                    Console.Write(passwdChar);
-                }
-                else if (Key.Key == ConsoleKey.Backspace && Key.Key != ConsoleKey.Enter && passWord.Length > 0)
+                    ConsoleKeyInfo Key = Console.ReadKey(true);
+                    if (Key.Key != ConsoleKey.Backspace && Key.Key != ConsoleKey.Enter)
+                    {
+                        passWord += Key.KeyChar;
+                        Console.Write(passwdChar);
+                    }
+                    else if (Key.Key == ConsoleKey.Backspace && Key.Key != ConsoleKey.Enter && passWord.Length > 0)
+                    {
+                        passWord = passWord.Substring(0, (passWord.Length - 1));
+                        Console.Write("\b \b");
+                    }
+                    else if (Key.Key == ConsoleKey.Enter)
+                    {
+                        break;
+                    }
+                } while (true);
+
+                Console.WriteLine("\n\nAuthenticating...");
+                if (!Authenticate(userName, passWord))
                 {
-                    passWord = passWord.Substring(0, (passWord.Length - 1));
-                    Console.Write("\b \b");
+                    passWord = "";
+                    userName = "";
+                    Console.WriteLine("Invalid Credentials. Press Try Again.");
+                    System.Threading.Thread.Sleep(1000);
                 }
-                else if (Key.Key == ConsoleKey.Enter)
+                else
                 {
                     break;
                 }
-            } while (true);
-
-            Console.WriteLine("\n\nAuthenticating...");
-            if (Authenticate(userName, passWord))
-            {
-                Console.WriteLine("Valid Credentials! Press Enter to Continue...");
-                Console.ReadKey();
-                return true;
             }
-            else
-            {
-                Console.WriteLine("Invalid Credentials. Press Enter to Try Again.");
-                Console.ReadKey();
-                LoginScreen();
-            }
+            while(true);
 
-            return false;
+            Console.WriteLine("Valid Credentials! Logging in...");
+            System.Threading.Thread.Sleep(1000);
+
+            return Authenticate(userName, passWord);
         }
 
         private bool Authenticate(string userName, string passWord)

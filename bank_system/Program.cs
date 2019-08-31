@@ -14,8 +14,15 @@ namespace bank_system
 
             Login MyBankLogin = new Login();
             Menu MyMenu = new Menu();
+            bool loginSuccess = false;
 
-            if (MyBankLogin.LoginScreen())
+            do
+            {
+                loginSuccess = MyBankLogin.LoginScreen();
+            }
+            while (!loginSuccess);
+
+            if(loginSuccess)
                 MyMenu.MenuScreen();
 
             Console.Read();
@@ -23,28 +30,50 @@ namespace bank_system
 
         public void MenuScreen()
         {
+            int choice = -1;
+
             Console.Clear();
+            do
+            {
+                Console.Clear();
 
-            Console.WriteLine("WELCOME TO ONLINE BANKING SYSTEM");
-            Console.WriteLine("=================================");
-            Console.WriteLine(
-                "1. Create a new account.\n" +
-                "2. Search for an account.\n" +
-                "3. Deposit\n" +
-                "4. Withdraw\n" +
-                "5. A/C Statement\n" +
-                "6. Delete Account\n" +
-                "7. Exit");
-            Console.WriteLine("=================================");
-            Console.Write("Enter your choice (1-7): ");
-            int cursorPosLeftChoice = Console.CursorLeft;
-            int cursorPosTopChoice = Console.CursorTop;
-            Console.WriteLine("\n=================================");
+                Console.WriteLine("WELCOME TO ONLINE BANKING SYSTEM");
+                Console.WriteLine("=================================");
+                Console.WriteLine(
+                    "1. Create a new account.\n" +
+                    "2. Search for an account.\n" +
+                    "3. Deposit\n" +
+                    "4. Withdraw\n" +
+                    "5. A/C Statement\n" +
+                    "6. Delete Account\n" +
+                    "7. Exit");
+                Console.WriteLine("=================================");
+                Console.Write("Enter your choice (1-7): ");
+                int cursorPosLeftChoice = Console.CursorLeft;
+                int cursorPosTopChoice = Console.CursorTop;
+                Console.WriteLine("\n=================================");
 
-            Console.SetCursorPosition(cursorPosLeftChoice, cursorPosTopChoice);
-            string userInput = Console.ReadLine();
-            if (String.Equals(userInput, '7'))
-                Environment.Exit(0);
+                Console.SetCursorPosition(cursorPosLeftChoice, cursorPosTopChoice);
+                string userInput = Console.ReadLine();
+
+                if (!int.TryParse(userInput, out choice))
+                {
+                    Console.WriteLine("\n{0} is not an a number. Please input a number between 1-7.", userInput);
+                    System.Threading.Thread.Sleep(1000);
+                }
+                else if(choice < 1 || choice > 7)
+                {
+                    Console.WriteLine("\nPlease input a number between 1-7.", userInput);
+                    System.Threading.Thread.Sleep(1000);
+                }
+                else
+                {
+                    break;
+                }
+                
+            }
+            while(true);
+            MenuChoice(choice);
 
             Console.ReadKey();
         }
