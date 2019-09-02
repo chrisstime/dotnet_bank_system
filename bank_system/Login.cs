@@ -16,21 +16,23 @@ namespace bank_system
             {
                 Console.Clear();
 
-                Console.WriteLine("╔═════════════════════════════════╗");
-                Console.WriteLine(" WELCOME TO ONLINE BANKING SYSTEM");
-                Console.WriteLine("╠═════════════════════════════════╣");
-                Console.WriteLine("\tLogin to Start\n");
+                Console.WriteLine("╔══════════════════════════════════════╗");
+                Console.WriteLine("║   WELCOME TO ONLINE BANKING SYSTEM   ║");
+                Console.WriteLine("╠══════════════════════════════════════╣");
+                Console.WriteLine("║            Login to Start            ║");
 
-                Console.Write("Username: ");
+                Console.Write("║ Username: ");
                 int cursorPosLeftUserName = Console.CursorLeft;
                 int cursorPosTopUserName = Console.CursorTop;
+                Console.WriteLine("                           ║");
 
-                Console.Write("\nPassword: ");
+                Console.Write("║ Password: ");
                 int cursorPosLeftPwd = Console.CursorLeft;
                 int cursorPosTopPwd = Console.CursorTop;
+                Console.WriteLine("                           ║");
 
                 /* \n is essential so it doesn't affect the input interface*/
-                Console.WriteLine("\n=================================");
+                Console.WriteLine("╚══════════════════════════════════════╝");
                 Console.SetCursorPosition(cursorPosLeftUserName, cursorPosTopUserName);
                 userName = Console.ReadLine();
 
@@ -63,7 +65,7 @@ namespace bank_system
                     passWord = "";
                     userName = "";
                     Console.WriteLine("Invalid Credentials. Press Try Again.");
-                    System.Threading.Thread.Sleep(1000);
+                    System.Threading.Thread.Sleep(500);
                 }
                 else
                 {
@@ -73,7 +75,7 @@ namespace bank_system
             while(true);
 
             Console.WriteLine("Valid Credentials! Logging in...");
-            System.Threading.Thread.Sleep(1000);
+            System.Threading.Thread.Sleep(500);
 
             return Authenticate(userName, passWord);
         }

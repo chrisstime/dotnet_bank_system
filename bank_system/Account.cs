@@ -44,7 +44,7 @@ namespace bank_system
                 Console.Write("║ Address: ");
                 int cursorPosLeftAddress = Console.CursorLeft;
                 int cursorPosTopAddress = Console.CursorTop;
-                Console.WriteLine("                        ║");
+                Console.WriteLine("                         ║");
 
                 Console.Write("║ Phone Number: ");
                 int cursorPosLeftPhone = Console.CursorLeft;
@@ -54,9 +54,9 @@ namespace bank_system
                 Console.Write("║ Email: ");
                 int cursorPosLeftEmail = Console.CursorLeft;
                 int cursorPosTopEmail = Console.CursorTop;
-                Console.WriteLine("                     ║");
+                Console.WriteLine("                        ║");
 
-                Console.WriteLine("╚═════════════════════════════════╝");
+                Console.WriteLine("╚═══════════════════════════════════╝");
 
                 Console.SetCursorPosition(cursorPosLeftFName, cursorPosTopFName);
                 newUser.fName = Console.ReadLine();
@@ -86,6 +86,11 @@ namespace bank_system
                 if (String.Equals(confirm.ToLower(), 'y'.ToString()))
                 {
                     success = CreateAccount(newUser);
+                }
+                else
+                {
+                    Console.WriteLine("Please enter 'y' or 'n' only.");
+                    System.Threading.Thread.Sleep(500);
                 }
             } while(!success);
 

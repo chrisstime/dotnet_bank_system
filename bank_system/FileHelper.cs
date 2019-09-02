@@ -68,7 +68,7 @@ namespace bank_system
 
             catch (SerializationException e)
             {
-                throw;
+                throw e;
             }
             finally
             {
