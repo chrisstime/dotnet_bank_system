@@ -14,6 +14,8 @@ namespace bank_system
 
             Login MyBankLogin = new Login();
             Menu MyMenu = new Menu();
+            FileHelper fileHelper = new FileHelper();
+            fileHelper.CreateDirectory("Accounts");
             bool loginSuccess = false;
 
             do

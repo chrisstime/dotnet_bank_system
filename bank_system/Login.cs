@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
 
 namespace bank_system
 {
@@ -81,17 +80,16 @@ namespace bank_system
 
         private bool Authenticate(string userName, string passWord)
         {
-            string fileContent;
+            FileHelper fileHelper = new FileHelper();
+            string[] fileContent = fileHelper.ReadFile("login.txt");
             bool allowAccess = false;
-            StreamReader file = new StreamReader("login.txt");
-            while ((fileContent = file.ReadLine()) != null)
-            {
-                char delimeterChar = ' ';
-                string[] credentials = fileContent.Split(delimeterChar);
+            char delimeterChar = ' ';
 
+            foreach (string line in fileContent)
+            {
+                string[] credentials = line.Split(delimeterChar);
                 allowAccess = String.Equals(credentials[0], userName) && String.Equals(credentials[1], passWord);
             }
-            file.Close();
 
             return allowAccess;
         }
