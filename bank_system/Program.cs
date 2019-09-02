@@ -18,7 +18,7 @@ namespace bank_system
 
             do
             {
-                loginSuccess = MyBankLogin.LoginScreen();
+                loginSuccess = MyBankLogin.LoginInterface();
             }
             while (!loginSuccess);
 
@@ -37,8 +37,8 @@ namespace bank_system
             {
                 Console.Clear();
 
-                Console.WriteLine("WELCOME TO ONLINE BANKING SYSTEM");
-                Console.WriteLine("=================================");
+                Console.WriteLine("   WELCOME TO ONLINE BANKING SYSTEM ");
+                Console.WriteLine("╠════════════════════════════════════╣");
                 Console.WriteLine(
                     "1. Create a new account.\n" +
                     "2. Search for an account.\n" +
@@ -83,6 +83,8 @@ namespace bank_system
             switch (userChoice)
             {
                 case 1:
+                    Account NewAccount = new Account();
+                    NewAccount.AccountScreen();
                     break;
                 case 2:
                     break;

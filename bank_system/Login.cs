@@ -11,17 +11,15 @@ namespace bank_system
     {
         string userName, passWord;
 
-        public bool LoginScreen()
+        public bool LoginInterface()
         {
-            Console.Clear();
-
             do
             {
                 Console.Clear();
 
-                Console.WriteLine("=================================");
-                Console.WriteLine("WELCOME TO ONLINE BANKING SYSTEM");
-                Console.WriteLine("=================================");
+                Console.WriteLine("╔═════════════════════════════════╗");
+                Console.WriteLine(" WELCOME TO ONLINE BANKING SYSTEM");
+                Console.WriteLine("╠═════════════════════════════════╣");
                 Console.WriteLine("\tLogin to Start\n");
 
                 Console.Write("Username: ");
