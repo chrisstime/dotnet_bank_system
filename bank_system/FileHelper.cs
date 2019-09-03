@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
@@ -11,8 +7,8 @@ namespace bank_system
 {
     class FileHelper
     {
-        private static string projectDir = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
-        private static string accountsDir = Path.Combine(projectDir, "Accounts");
+        private static readonly string projectDir = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
+        private static readonly string accountsDir = Path.Combine(projectDir, "Accounts");
 
         public void CreateDirectory(string subDirectory)
         {
@@ -28,6 +24,7 @@ namespace bank_system
 
         public bool CreateAccount(string textFile, Account.User user)
         {
+            bool success = false;
             string newAccountFilePath = Path.Combine(accountsDir, textFile);
             try
             {
@@ -38,20 +35,19 @@ namespace bank_system
                 }
 
                 BinaryFormatter formatter = new BinaryFormatter();
-                //File.WriteAllLines(newAccountFilePath, content, Encoding.UTF8);
                 Stream stream = new FileStream(newAccountFilePath, FileMode.Create, FileAccess.Write);
 
                 formatter.Serialize(stream, user);
                 stream.Close();
 
-                return true;
+                success =  true;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Console.WriteLine(ex.ToString());
+                Console.WriteLine(e.Message);
             }
 
-            return false;
+            return success;
         }
 
         public Account.User OpenAccount(string accountNumber)
@@ -76,6 +72,27 @@ namespace bank_system
             }
 
             return user;
+        }
+
+        public bool DeleteAccount(string accountNumber)
+        {
+            string filePath = Path.Combine(accountsDir, accountNumber);
+            bool success = false;
+
+            try
+            {
+                if (File.Exists(filePath))
+                {
+                    File.Delete(Path.Combine(filePath));
+                    success = true;
+                }
+            }
+            catch (IOException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            return success;
         }
     }
 }

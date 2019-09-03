@@ -9,19 +9,32 @@ namespace bank_system
 {
     class Account
     {
+        private int accountCounter;
+
         [Serializable]
         public class User
         {
             public string fName, lName, address, email;
-            public int phoneNumber;
+            public int id, phoneNumber;
 
         }
 
-        private bool success = false;
+        public Account(int accountCounter)
+        {
+            this.accountCounter = accountCounter; 
+        }
+
+        public Account()
+        {
+
+        }
 
         public void AccountScreen()
         {
+            bool success = false;
             User newUser = new User();
+            GenerateId(newUser);
+
             do
             {
                 Console.Clear();
@@ -44,7 +57,7 @@ namespace bank_system
                 Console.Write("║ Address: ");
                 int cursorPosLeftAddress = Console.CursorLeft;
                 int cursorPosTopAddress = Console.CursorTop;
-                Console.WriteLine("                         ║");
+                Console.WriteLine("                      ║");
 
                 Console.Write("║ Phone Number: ");
                 int cursorPosLeftPhone = Console.CursorLeft;
@@ -56,7 +69,7 @@ namespace bank_system
                 int cursorPosTopEmail = Console.CursorTop;
                 Console.WriteLine("                        ║");
 
-                Console.WriteLine("╚═══════════════════════════════════╝");
+                Console.WriteLine("╚═════════════════════════════════╝");
 
                 Console.SetCursorPosition(cursorPosLeftFName, cursorPosTopFName);
                 newUser.fName = Console.ReadLine();
@@ -86,6 +99,9 @@ namespace bank_system
                 if (String.Equals(confirm.ToLower(), 'y'.ToString()))
                 {
                     success = CreateAccount(newUser);
+                    Console.WriteLine("Account created successfully! Details will be provided via email.");
+                    Console.WriteLine("Account number is: {0}", newUser.id);
+                    System.Threading.Thread.Sleep(1500);
                 }
                 else
                 {
@@ -96,15 +112,18 @@ namespace bank_system
 
         }
 
-        private bool CreateAccount(User newUser)
+        private bool CreateAccount(User user)
         {
-            //string[] user = { newUser.fName, newUser.lName, newUser.address, newUser.phoneNumber.ToString(), newUser.email };
             FileHelper fileHelper = new FileHelper();
-            fileHelper.CreateAccount("12345.txt", newUser);
-
-            fileHelper.OpenAccount("12345.txt");
+            string fileName = user.id + ".txt";
+            fileHelper.CreateAccount(fileName, user);
 
             return true;
+        }
+
+        private void GenerateId(User user)
+        {
+            user.id = ++accountCounter;
         }
     } 
 }
