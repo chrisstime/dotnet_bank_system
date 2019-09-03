@@ -20,7 +20,7 @@ namespace bank_system
             bankConstant = new Constants();
             fileHelper = new FileHelper();
             accountManager = new Account(100000);
-            menu = new Menu();
+            menu = new Menu(myBankLogin, fileHelper, bankConstant, accountManager);
             Console.Clear();
 
             fileHelper.CreateDirectory("Accounts");

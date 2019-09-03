@@ -8,6 +8,19 @@ namespace bank_system
 {
     class Menu
     {
+        private static Login myBankLogin;
+        private static FileHelper fileHelper;
+        private static Constants bankConstant;
+        private static Account accountManager;
+
+        public Menu(Login login, FileHelper fHelper, Constants constant, Account account)
+        {
+            myBankLogin = login;
+            fileHelper = fHelper;
+            bankConstant = constant;
+            accountManager = account;
+        }
+
         public void MenuScreen()
         {
             int choice = -1;
