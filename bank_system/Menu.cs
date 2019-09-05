@@ -8,17 +8,13 @@ namespace bank_system
 {
     class Menu
     {
-        private static Login myBankLogin;
         private static FileHelper fileHelper;
-        private static Constants bankConstant;
         private static Account accountManager;
 
-        public Menu(Login login, FileHelper fHelper, Constants constant, Account account)
+        public Menu()
         {
-            myBankLogin = login;
-            fileHelper = fHelper;
-            bankConstant = constant;
-            accountManager = account;
+            fileHelper = new FileHelper();
+            accountManager = new Account(Constants.initialAccountCount);
         }
 
         public void MenuScreen()
@@ -75,17 +71,20 @@ namespace bank_system
             switch (userChoice)
             {
                 case 1:
-                    accountManager.AccountScreen();
+                    accountManager.CreateAccount();
                     break;
                 case 2:
+                    accountManager.SearchAccount();
                     break;
                 case 3:
                     break;
                 case 4:
                     break;
                 case 5:
+
                     break;
                 case 6:
+                    accountManager.DeleteAccount();
                     break;
                 case 7:
                     Environment.Exit(0);

@@ -10,20 +10,17 @@ namespace bank_system
     {
         private static Login myBankLogin;
         private static FileHelper fileHelper;
-        private static Constants bankConstant;
-        private static Account accountManager;
         private static Menu menu;
 
         public static void Main(string[] args)
         {
-            myBankLogin = new Login();
-            bankConstant = new Constants();
+            myBankLogin = new Login();            
+            menu = new Menu();
             fileHelper = new FileHelper();
-            accountManager = new Account(100000);
-            menu = new Menu(myBankLogin, fileHelper, bankConstant, accountManager);
             Console.Clear();
 
-            fileHelper.CreateDirectory("Accounts");
+            fileHelper.CreateDirectory(Constants.accountsDir);
+            fileHelper.LoadAccounts();
             bool loginSuccess = false;
 
             do
@@ -34,8 +31,6 @@ namespace bank_system
 
             if(loginSuccess)
                 menu.MenuScreen();
-
-            Console.Read();
         }
     }
 }

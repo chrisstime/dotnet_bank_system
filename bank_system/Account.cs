@@ -4,36 +4,40 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
 
 namespace bank_system
 {
     class Account
     {
+        private static FileHelper fileHelper = new FileHelper();
+        User user;
         private int accountCounter;
 
         [Serializable]
         public class User
         {
             public string fName, lName, address, email;
-            public int id, phoneNumber;
-
+            public int id, phoneNumber, balance;
         }
 
         public Account(int accountCounter)
         {
-            this.accountCounter = accountCounter; 
+            this.accountCounter = accountCounter;
         }
 
         public Account()
         {
-
+            
         }
 
-        public void AccountScreen()
+        public void CreateAccount()
         {
             bool success = false;
-            User newUser = new User();
-            GenerateId(newUser);
+            user = new User();
+            GenerateId(user);
+            user.balance = 0;
 
             do
             {
@@ -72,21 +76,21 @@ namespace bank_system
                 Console.WriteLine("╚═════════════════════════════════╝");
 
                 Console.SetCursorPosition(cursorPosLeftFName, cursorPosTopFName);
-                newUser.fName = Console.ReadLine();
+                user.fName = Console.ReadLine();
 
                 Console.SetCursorPosition(cursorPosLeftLName, cursorPosTopLName);
-                newUser.lName = Console.ReadLine();
+                user.lName = Console.ReadLine();
 
                 Console.SetCursorPosition(cursorPosLeftAddress, cursorPosTopAddress);
-                newUser.address = Console.ReadLine();
+                user.address = Console.ReadLine();
 
                 Console.SetCursorPosition(cursorPosLeftPhone, cursorPosTopPhone);
                 string phoneInput = Console.ReadLine();
                 phoneInput = phoneInput.Substring(0, 10);
-                int.TryParse(phoneInput, out newUser.phoneNumber);
+                int.TryParse(phoneInput, out user.phoneNumber);
 
                 Console.SetCursorPosition(cursorPosLeftEmail, cursorPosTopEmail);
-                newUser.email = Console.ReadLine();
+                user.email = Console.ReadLine();
 
                 
                 Console.Write("\nIs the information correct (y/n)? ");
@@ -98,9 +102,9 @@ namespace bank_system
                 
                 if (String.Equals(confirm.ToLower(), 'y'.ToString()))
                 {
-                    success = CreateAccount(newUser);
+                    success = true;
                     Console.WriteLine("Account created successfully! Details will be provided via email.");
-                    Console.WriteLine("Account number is: {0}", newUser.id);
+                    Console.WriteLine("Account number is: {0}", user.id);
                     System.Threading.Thread.Sleep(1500);
                 }
                 else
@@ -110,15 +114,89 @@ namespace bank_system
                 }
             } while(!success);
 
+            fileHelper.SerializeAccount(AccountFileName(user), user);
         }
 
-        private bool CreateAccount(User user)
+        public bool AccountExist(int accountNumber)
         {
-            FileHelper fileHelper = new FileHelper();
-            string fileName = user.id + ".txt";
-            fileHelper.CreateAccount(fileName, user);
+            if (accountNumber > Constants.initialAccountCount && accountNumber <= accountCounter)
+                return true;
+            return false;
+        }
 
-            return true;
+        public int SearchAccount()
+        {
+            int accountNumber;
+            bool success = false;
+
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("Search for Account Number: ");
+                int.TryParse(Console.ReadLine(), out accountNumber);
+                if (AccountExist(accountNumber))
+                {
+                    Console.WriteLine("Account found! Loading account file...");
+                    System.Threading.Thread.Sleep(1500);
+                    ViewAccount(accountNumber);
+                }
+                else
+                {
+                    Console.WriteLine(AccountExist(accountNumber));
+                    Console.WriteLine("Account does not exist. Please try again.");
+                    Console.ReadKey();
+                }
+            }
+            while (!success);
+
+            return accountNumber;
+        }
+
+        public void DeleteAccount()
+        {
+            int accountNumber;
+            bool success = false;
+
+            do
+            {
+                accountNumber = SearchAccount();
+                Console.WriteLine("Delete Account (y/n)? ");
+                string confirm = Console.ReadLine();
+                if (String.Equals(confirm.ToLower(), 'y'.ToString()))
+                {
+                    success = true;
+                    Console.WriteLine("Account number {0} has been deleted", user.id);
+                    System.Threading.Thread.Sleep(1500);
+                    fileHelper.DeleteAccountFile(accountNumber);
+                }
+                else
+                {
+                    Console.WriteLine("Please enter 'y' or 'n' only.");
+                    System.Threading.Thread.Sleep(500);
+                }
+            }
+            while (!success);
+            
+        }
+
+        public void ViewAccount(int accountNumber)
+        {
+            user = fileHelper.DeserializeAccount(accountNumber);
+            Console.WriteLine("First Name: {0}", user.fName);
+            Console.WriteLine("Last Name: {0}", user.fName);
+            Console.WriteLine("Address: {0}", user.address);
+            Console.WriteLine("Phone Number: {0}", user.phoneNumber);
+            Console.WriteLine("Email: {0}", user.email);
+            Console.WriteLine("Balance: ", user.balance);
+            Console.WriteLine("Press any key to go back...");
+
+            Console.ReadKey();
+            
+        }
+
+        private string AccountFileName(User user)
+        {
+            return  user.id + ".txt";
         }
 
         private void GenerateId(User user)

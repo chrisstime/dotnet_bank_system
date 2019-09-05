@@ -7,12 +7,11 @@ namespace bank_system
 {
     class FileHelper
     {
-        private static readonly string projectDir = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
-        private static readonly string accountsDir = Path.Combine(projectDir, "Accounts");
-
         public void CreateDirectory(string subDirectory)
         {
-            Directory.CreateDirectory(Path.Combine(projectDir, subDirectory));
+            string newDir = Path.Combine(Constants.projectDir, subDirectory);
+            if (!File.Exists(newDir))
+                Directory.CreateDirectory(newDir);
         }
 
         public string[] ReadFile(string textFile)
@@ -22,14 +21,24 @@ namespace bank_system
             return fileContent;
         }
 
-        public bool CreateAccount(string textFile, Account.User user)
+        public int LoadAccounts()
+        {
+            int accountCount = 100000;
+
+            if (File.Exists(Constants.accountTracker))
+                int.TryParse(ReadFile(Constants.accountTracker)[0], out accountCount);
+
+            return accountCount;
+        }
+
+        public bool SerializeAccount(string textFile, Account.User user)
         {
             bool success = false;
-            string newAccountFilePath = Path.Combine(accountsDir, textFile);
+            string newAccountFilePath = Path.Combine(Constants.accountsDir, textFile);
             try
             {
 
-                if (File.Exists(newAccountFilePath))
+                if (!File.Exists(newAccountFilePath))
                 {                   
                     File.Delete(newAccountFilePath);
                 }
@@ -50,12 +59,12 @@ namespace bank_system
             return success;
         }
 
-        public Account.User OpenAccount(string accountNumber)
+        public Account.User DeserializeAccount(int accountNumber)
         {
             Account.User user = new Account.User();
-            string filePath = Path.Combine(accountsDir, accountNumber);
+            string filePath = Path.Combine(Constants.accountsDir, accountNumber.ToString() + ".txt");
             FileStream fs = new FileStream(filePath, FileMode.Open);
-            
+
             try
             {
                 BinaryFormatter formatter = new BinaryFormatter();
@@ -74,9 +83,9 @@ namespace bank_system
             return user;
         }
 
-        public bool DeleteAccount(string accountNumber)
+        public bool DeleteAccountFile(int accountNumber)
         {
-            string filePath = Path.Combine(accountsDir, accountNumber);
+            string filePath = Path.Combine(Constants.accountsDir, accountNumber + ".txt");
             bool success = false;
 
             try
