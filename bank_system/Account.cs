@@ -126,7 +126,6 @@ namespace bank_system
 
         public User SearchAccount()
         {
-            //int accountNumber;
             User user = new User();
             bool success = false;
 
@@ -141,6 +140,7 @@ namespace bank_system
                     System.Threading.Thread.Sleep(1500);
                     user = LoadAccount(accountNumber);
                     ViewAccount(user);
+                    success = true;
                 }
                 else
                 {
@@ -200,6 +200,8 @@ namespace bank_system
 
             do
             {
+                Console.Clear();
+
                 Console.WriteLine("Amount: $");
                 string userInput = Console.ReadLine();
 
@@ -217,6 +219,8 @@ namespace bank_system
                 {
                     user.balance -= amount;
                     Console.WriteLine("Withdraw successful! The remaining balance for the user is: ${0}", user.balance);
+                    success = true;
+                    System.Threading.Thread.Sleep(750);
                 }
             }
             while (!success);
@@ -229,6 +233,8 @@ namespace bank_system
 
             do
             {
+                Console.Clear();
+
                 Console.WriteLine("Amount: $");
                 string userInput = Console.ReadLine();
 
@@ -246,6 +252,8 @@ namespace bank_system
                 {
                     user.balance += amount;
                     Console.WriteLine("Deposit successful! The new balance for the user is: ${0}", user.balance);
+                    success = true;
+                    System.Threading.Thread.Sleep(750);
                 }
             }
             while (!success);

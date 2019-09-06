@@ -77,8 +77,10 @@ namespace bank_system
                     accountManager.SearchAccount();
                     break;
                 case 3:
+                    accountManager.Deposit();
                     break;
                 case 4:
+                    accountManager.Withdraw();
                     break;
                 case 5:
 
