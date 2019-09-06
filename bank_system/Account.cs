@@ -86,7 +86,7 @@ namespace bank_system
 
                 Console.SetCursorPosition(cursorPosLeftPhone, cursorPosTopPhone);
                 string phoneInput = Console.ReadLine();
-                phoneInput = phoneInput.Substring(0, 10);
+                phoneInput = phoneInput.Substring(0, 9);
                 int.TryParse(phoneInput, out user.phoneNumber);
 
                 Console.SetCursorPosition(cursorPosLeftEmail, cursorPosTopEmail);
@@ -117,14 +117,7 @@ namespace bank_system
             fileHelper.SerializeAccount(AccountFileName(user), user);
         }
 
-        public bool AccountExist(int accountNumber)
-        {
-            if (accountNumber > Constants.initialAccountCount && accountNumber <= accountCounter)
-                return true;
-            return false;
-        }
-
-        public User SearchAccount()
+        private User AccountLookup()
         {
             User user = new User();
             bool success = false;
@@ -134,22 +127,31 @@ namespace bank_system
                 Console.Clear();
                 Console.WriteLine("Search for Account Number: ");
                 int.TryParse(Console.ReadLine(), out int accountNumber);
-                if (AccountExist(accountNumber))
+                if (accountNumber > Constants.initialAccountCount && accountNumber <= accountCounter)
                 {
                     Console.WriteLine("Account found! Loading account file...");
-                    System.Threading.Thread.Sleep(1500);
+                    System.Threading.Thread.Sleep(500);
                     user = LoadAccount(accountNumber);
-                    ViewAccount(user);
                     success = true;
                 }
                 else
                 {
-                    Console.WriteLine(AccountExist(accountNumber));
                     Console.WriteLine("Account does not exist. Please try again.");
-                    Console.ReadKey();
+                    System.Threading.Thread.Sleep(500);
                 }
             }
             while (!success);
+
+            return user;
+        }
+
+        public User SearchAccount()
+        {
+            User user = AccountLookup();
+            ViewAccount(user);
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
+            
 
             return user;
         }
@@ -167,7 +169,7 @@ namespace bank_system
                 {
                     success = true;
                     Console.WriteLine("Account number {0} has been deleted", user.id);
-                    System.Threading.Thread.Sleep(1500);
+                    System.Threading.Thread.Sleep(750);
                     fileHelper.DeleteAccountFile(user.id);
                 }
                 else
@@ -180,29 +182,28 @@ namespace bank_system
             
         }
 
-        public void ViewAccount(User user)
+        private void ViewAccount(User user)
         {
+            Console.WriteLine("Account No: {0}", user.id);
+            Console.WriteLine("Account Balance: ${0}", user.balance);
             Console.WriteLine("First Name: {0}", user.fName);
             Console.WriteLine("Last Name: {0}", user.fName);
             Console.WriteLine("Address: {0}", user.address);
             Console.WriteLine("Phone Number: {0}", user.phoneNumber);
             Console.WriteLine("Email: {0}", user.email);
-            Console.WriteLine("Balance: ", user.balance);
-            Console.WriteLine("Press any key to go back...");
-
-            Console.ReadKey();
         }
 
         public void Withdraw()
         {
             bool success = false;
-            User user = SearchAccount();
+            User user = AccountLookup();
 
             do
             {
                 Console.Clear();
 
-                Console.WriteLine("Amount: $");
+                Console.WriteLine("Account No: {0}", user.id);
+                Console.Write("Amount: $");
                 string userInput = Console.ReadLine();
 
                 if (!int.TryParse(userInput, out int amount))
@@ -219,6 +220,7 @@ namespace bank_system
                 {
                     user.balance -= amount;
                     Console.WriteLine("Withdraw successful! The remaining balance for the user is: ${0}", user.balance);
+                    fileHelper.SerializeAccount(AccountFileName(user), user);
                     success = true;
                     System.Threading.Thread.Sleep(750);
                 }
@@ -229,13 +231,14 @@ namespace bank_system
         public void Deposit()
         {
             bool success = false;
-            User user = SearchAccount();
+            User user = AccountLookup();
 
             do
             {
                 Console.Clear();
 
-                Console.WriteLine("Amount: $");
+                Console.WriteLine("Account No: {0}", user.id);
+                Console.Write("Amount: $");
                 string userInput = Console.ReadLine();
 
                 if (!int.TryParse(userInput, out int amount))
@@ -252,6 +255,7 @@ namespace bank_system
                 {
                     user.balance += amount;
                     Console.WriteLine("Deposit successful! The new balance for the user is: ${0}", user.balance);
+                    fileHelper.SerializeAccount(AccountFileName(user), user);
                     success = true;
                     System.Threading.Thread.Sleep(750);
                 }

@@ -14,7 +14,7 @@ namespace bank_system
         public Menu()
         {
             fileHelper = new FileHelper();
-            accountManager = new Account(Constants.initialAccountCount);
+            accountManager = new Account(fileHelper.LoadAccounts());
         }
 
         public void MenuScreen()
