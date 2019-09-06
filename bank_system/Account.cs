@@ -124,9 +124,10 @@ namespace bank_system
             return false;
         }
 
-        public int SearchAccount()
+        public User SearchAccount()
         {
             int accountNumber;
+            User user = new User();
             bool success = false;
 
             do
@@ -138,7 +139,8 @@ namespace bank_system
                 {
                     Console.WriteLine("Account found! Loading account file...");
                     System.Threading.Thread.Sleep(1500);
-                    ViewAccount(accountNumber);
+                    user = LoadAccount(accountNumber);
+                    ViewAccount(user);
                 }
                 else
                 {
@@ -149,17 +151,16 @@ namespace bank_system
             }
             while (!success);
 
-            return accountNumber;
+            return user;
         }
 
         public void DeleteAccount()
         {
-            int accountNumber;
             bool success = false;
 
             do
             {
-                accountNumber = SearchAccount();
+                User user = SearchAccount();
                 Console.WriteLine("Delete Account (y/n)? ");
                 string confirm = Console.ReadLine();
                 if (String.Equals(confirm.ToLower(), 'y'.ToString()))
@@ -167,7 +168,7 @@ namespace bank_system
                     success = true;
                     Console.WriteLine("Account number {0} has been deleted", user.id);
                     System.Threading.Thread.Sleep(1500);
-                    fileHelper.DeleteAccountFile(accountNumber);
+                    fileHelper.DeleteAccountFile(user.id);
                 }
                 else
                 {
@@ -179,9 +180,8 @@ namespace bank_system
             
         }
 
-        public void ViewAccount(int accountNumber)
+        public void ViewAccount(User user)
         {
-            user = fileHelper.DeserializeAccount(accountNumber);
             Console.WriteLine("First Name: {0}", user.fName);
             Console.WriteLine("Last Name: {0}", user.fName);
             Console.WriteLine("Address: {0}", user.address);
@@ -191,7 +191,71 @@ namespace bank_system
             Console.WriteLine("Press any key to go back...");
 
             Console.ReadKey();
-            
+        }
+
+        public void Withdraw()
+        {
+            bool success = false;
+            User user = SearchAccount();
+
+            do
+            {
+                Console.WriteLine("Amount: $");
+                string userInput = Console.ReadLine();
+                int amount;
+
+                if (!int.TryParse(userInput, out amount))
+                {
+                    Console.WriteLine("\n{0} Must be a number. Please input an amount.", userInput);
+                    System.Threading.Thread.Sleep(500);
+                }
+                else if (amount > user.balance)
+                {
+                    Console.WriteLine("\nThe amount is greater than the balance. You may only withdraw less than or equal to the account balance.");
+                    System.Threading.Thread.Sleep(500);
+                }
+                else
+                {
+                    user.balance -= amount;
+                    Console.WriteLine("Withdraw successful! The remaining balance for the user is: ${0}", user.balance);
+                }
+            }
+            while (!success);
+        }
+
+        public void Deposit()
+        {
+            bool success = false;
+            User user = SearchAccount();
+
+            do
+            {
+                Console.WriteLine("Amount: $");
+                string userInput = Console.ReadLine();
+                int amount;
+
+                if (!int.TryParse(userInput, out amount))
+                {
+                    Console.WriteLine("\n{0} Must be a number. Please input an amount.", userInput);
+                    System.Threading.Thread.Sleep(500);
+                }
+                else if (amount <= -1)
+                {
+                    Console.WriteLine("\n Deposit can't be negative. Please input a positive number or use the withdraw functionality instead.");
+                    System.Threading.Thread.Sleep(500);
+                }
+                else
+                {
+                    user.balance += amount;
+                    Console.WriteLine("Deposit successful! The new balance for the user is: ${0}", user.balance);
+                }
+            }
+            while (!success);
+        }
+
+        private User LoadAccount(int accountNumber)
+        {
+            return fileHelper.DeserializeAccount(accountNumber);
         }
 
         private string AccountFileName(User user)
