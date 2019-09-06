@@ -62,7 +62,7 @@ namespace bank_system
         public Account.User DeserializeAccount(int accountNumber)
         {
             Account.User user = new Account.User();
-            string filePath = Path.Combine(Constants.accountsDir, accountNumber.ToString() + ".txt");
+            string filePath = AccountPath(accountNumber);
             FileStream fs = new FileStream(filePath, FileMode.Open);
 
             try
@@ -85,7 +85,7 @@ namespace bank_system
 
         public bool DeleteAccountFile(int accountNumber)
         {
-            string filePath = Path.Combine(Constants.accountsDir, accountNumber + ".txt");
+            string filePath = AccountPath(accountNumber);
             bool success = false;
 
             try
@@ -102,6 +102,13 @@ namespace bank_system
             }
 
             return success;
+        }
+
+        private string AccountPath(int accountNumber)
+        {
+            string accountFilePath = Path.Combine(Constants.accountsDir, accountNumber + ".txt");
+
+            return accountFilePath;
         }
     }
 }
