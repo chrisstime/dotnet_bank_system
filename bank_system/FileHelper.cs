@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
@@ -11,12 +7,11 @@ namespace bank_system
 {
     class FileHelper
     {
-        private static string projectDir = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
-        private static string accountsDir = Path.Combine(projectDir, "Accounts");
-
         public void CreateDirectory(string subDirectory)
         {
-            Directory.CreateDirectory(Path.Combine(projectDir, subDirectory));
+            string newDir = Path.Combine(Constants.projectDir, subDirectory);
+            if (!File.Exists(newDir))
+                Directory.CreateDirectory(newDir);
         }
 
         public string[] ReadFile(string textFile)
@@ -26,40 +21,50 @@ namespace bank_system
             return fileContent;
         }
 
-        public bool CreateAccount(string textFile, Account.User user)
+        public int LoadAccounts()
         {
-            string newAccountFilePath = Path.Combine(accountsDir, textFile);
+            int accountCount = 100000;
+
+            if (File.Exists(Constants.accountTracker))
+                int.TryParse(ReadFile(Constants.accountTracker)[0], out accountCount);
+
+            return accountCount;
+        }
+
+        public bool SerializeAccount(string textFile, Account.User user)
+        {
+            bool success = false;
+            string newAccountFilePath = Path.Combine(Constants.accountsDir, textFile);
             try
             {
 
-                if (File.Exists(newAccountFilePath))
+                if (!File.Exists(newAccountFilePath))
                 {                   
                     File.Delete(newAccountFilePath);
                 }
 
                 BinaryFormatter formatter = new BinaryFormatter();
-                //File.WriteAllLines(newAccountFilePath, content, Encoding.UTF8);
                 Stream stream = new FileStream(newAccountFilePath, FileMode.Create, FileAccess.Write);
 
                 formatter.Serialize(stream, user);
                 stream.Close();
 
-                return true;
+                success =  true;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Console.WriteLine(ex.ToString());
+                Console.WriteLine(e.Message);
             }
 
-            return false;
+            return success;
         }
 
-        public Account.User OpenAccount(string accountNumber)
+        public Account.User DeserializeAccount(int accountNumber)
         {
             Account.User user = new Account.User();
-            string filePath = Path.Combine(accountsDir, accountNumber);
+            string filePath = AccountPath(accountNumber);
             FileStream fs = new FileStream(filePath, FileMode.Open);
-            
+
             try
             {
                 BinaryFormatter formatter = new BinaryFormatter();
@@ -68,7 +73,7 @@ namespace bank_system
 
             catch (SerializationException e)
             {
-                throw;
+                throw e;
             }
             finally
             {
@@ -76,6 +81,34 @@ namespace bank_system
             }
 
             return user;
+        }
+
+        public bool DeleteAccountFile(int accountNumber)
+        {
+            string filePath = AccountPath(accountNumber);
+            bool success = false;
+
+            try
+            {
+                if (File.Exists(filePath))
+                {
+                    File.Delete(Path.Combine(filePath));
+                    success = true;
+                }
+            }
+            catch (IOException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            return success;
+        }
+
+        private string AccountPath(int accountNumber)
+        {
+            string accountFilePath = Path.Combine(Constants.accountsDir, accountNumber + ".txt");
+
+            return accountFilePath;
         }
     }
 }
