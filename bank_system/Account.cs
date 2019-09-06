@@ -126,7 +126,7 @@ namespace bank_system
 
         public User SearchAccount()
         {
-            int accountNumber;
+            //int accountNumber;
             User user = new User();
             bool success = false;
 
@@ -134,7 +134,7 @@ namespace bank_system
             {
                 Console.Clear();
                 Console.WriteLine("Search for Account Number: ");
-                int.TryParse(Console.ReadLine(), out accountNumber);
+                int.TryParse(Console.ReadLine(), out int accountNumber);
                 if (AccountExist(accountNumber))
                 {
                     Console.WriteLine("Account found! Loading account file...");
@@ -202,9 +202,8 @@ namespace bank_system
             {
                 Console.WriteLine("Amount: $");
                 string userInput = Console.ReadLine();
-                int amount;
 
-                if (!int.TryParse(userInput, out amount))
+                if (!int.TryParse(userInput, out int amount))
                 {
                     Console.WriteLine("\n{0} Must be a number. Please input an amount.", userInput);
                     System.Threading.Thread.Sleep(500);
@@ -232,9 +231,8 @@ namespace bank_system
             {
                 Console.WriteLine("Amount: $");
                 string userInput = Console.ReadLine();
-                int amount;
 
-                if (!int.TryParse(userInput, out amount))
+                if (!int.TryParse(userInput, out int amount))
                 {
                     Console.WriteLine("\n{0} Must be a number. Please input an amount.", userInput);
                     System.Threading.Thread.Sleep(500);
