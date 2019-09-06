@@ -86,7 +86,7 @@ namespace bank_system
 
                 Console.SetCursorPosition(cursorPosLeftPhone, cursorPosTopPhone);
                 string phoneInput = Console.ReadLine();
-                phoneInput = phoneInput.Substring(0, 10);
+                phoneInput = phoneInput.Substring(0, 9);
                 int.TryParse(phoneInput, out user.phoneNumber);
 
                 Console.SetCursorPosition(cursorPosLeftEmail, cursorPosTopEmail);
@@ -117,57 +117,60 @@ namespace bank_system
             fileHelper.SerializeAccount(AccountFileName(user), user);
         }
 
-        public bool AccountExist(int accountNumber)
+        private User AccountLookup()
         {
-            if (accountNumber > Constants.initialAccountCount && accountNumber <= accountCounter)
-                return true;
-            return false;
-        }
-
-        public int SearchAccount()
-        {
-            int accountNumber;
+            User user = new User();
             bool success = false;
 
             do
             {
                 Console.Clear();
                 Console.WriteLine("Search for Account Number: ");
-                int.TryParse(Console.ReadLine(), out accountNumber);
-                if (AccountExist(accountNumber))
+                int.TryParse(Console.ReadLine(), out int accountNumber);
+                if (accountNumber > Constants.initialAccountCount && accountNumber <= accountCounter)
                 {
                     Console.WriteLine("Account found! Loading account file...");
-                    System.Threading.Thread.Sleep(1500);
-                    ViewAccount(accountNumber);
+                    System.Threading.Thread.Sleep(500);
+                    user = LoadAccount(accountNumber);
+                    success = true;
                 }
                 else
                 {
-                    Console.WriteLine(AccountExist(accountNumber));
                     Console.WriteLine("Account does not exist. Please try again.");
-                    Console.ReadKey();
+                    System.Threading.Thread.Sleep(500);
                 }
             }
             while (!success);
 
-            return accountNumber;
+            return user;
+        }
+
+        public User SearchAccount()
+        {
+            User user = AccountLookup();
+            ViewAccount(user);
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
+            
+
+            return user;
         }
 
         public void DeleteAccount()
         {
-            int accountNumber;
             bool success = false;
 
             do
             {
-                accountNumber = SearchAccount();
+                User user = SearchAccount();
                 Console.WriteLine("Delete Account (y/n)? ");
                 string confirm = Console.ReadLine();
                 if (String.Equals(confirm.ToLower(), 'y'.ToString()))
                 {
                     success = true;
                     Console.WriteLine("Account number {0} has been deleted", user.id);
-                    System.Threading.Thread.Sleep(1500);
-                    fileHelper.DeleteAccountFile(accountNumber);
+                    System.Threading.Thread.Sleep(750);
+                    fileHelper.DeleteAccountFile(user.id);
                 }
                 else
                 {
@@ -179,19 +182,90 @@ namespace bank_system
             
         }
 
-        public void ViewAccount(int accountNumber)
+        private void ViewAccount(User user)
         {
-            user = fileHelper.DeserializeAccount(accountNumber);
+            Console.WriteLine("Account No: {0}", user.id);
+            Console.WriteLine("Account Balance: ${0}", user.balance);
             Console.WriteLine("First Name: {0}", user.fName);
             Console.WriteLine("Last Name: {0}", user.fName);
             Console.WriteLine("Address: {0}", user.address);
             Console.WriteLine("Phone Number: {0}", user.phoneNumber);
             Console.WriteLine("Email: {0}", user.email);
-            Console.WriteLine("Balance: ", user.balance);
-            Console.WriteLine("Press any key to go back...");
+        }
 
-            Console.ReadKey();
-            
+        public void Withdraw()
+        {
+            bool success = false;
+            User user = AccountLookup();
+
+            do
+            {
+                Console.Clear();
+
+                Console.WriteLine("Account No: {0}", user.id);
+                Console.Write("Amount: $");
+                string userInput = Console.ReadLine();
+
+                if (!int.TryParse(userInput, out int amount))
+                {
+                    Console.WriteLine("\n{0} Must be a number. Please input an amount.", userInput);
+                    System.Threading.Thread.Sleep(500);
+                }
+                else if (amount > user.balance)
+                {
+                    Console.WriteLine("\nThe amount is greater than the balance. You may only withdraw less than or equal to the account balance.");
+                    System.Threading.Thread.Sleep(500);
+                }
+                else
+                {
+                    user.balance -= amount;
+                    Console.WriteLine("Withdraw successful! The remaining balance for the user is: ${0}", user.balance);
+                    fileHelper.SerializeAccount(AccountFileName(user), user);
+                    success = true;
+                    System.Threading.Thread.Sleep(750);
+                }
+            }
+            while (!success);
+        }
+
+        public void Deposit()
+        {
+            bool success = false;
+            User user = AccountLookup();
+
+            do
+            {
+                Console.Clear();
+
+                Console.WriteLine("Account No: {0}", user.id);
+                Console.Write("Amount: $");
+                string userInput = Console.ReadLine();
+
+                if (!int.TryParse(userInput, out int amount))
+                {
+                    Console.WriteLine("\n{0} Must be a number. Please input an amount.", userInput);
+                    System.Threading.Thread.Sleep(500);
+                }
+                else if (amount <= -1)
+                {
+                    Console.WriteLine("\n Deposit can't be negative. Please input a positive number or use the withdraw functionality instead.");
+                    System.Threading.Thread.Sleep(500);
+                }
+                else
+                {
+                    user.balance += amount;
+                    Console.WriteLine("Deposit successful! The new balance for the user is: ${0}", user.balance);
+                    fileHelper.SerializeAccount(AccountFileName(user), user);
+                    success = true;
+                    System.Threading.Thread.Sleep(750);
+                }
+            }
+            while (!success);
+        }
+
+        private User LoadAccount(int accountNumber)
+        {
+            return fileHelper.DeserializeAccount(accountNumber);
         }
 
         private string AccountFileName(User user)

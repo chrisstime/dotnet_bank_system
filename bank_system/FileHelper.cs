@@ -23,7 +23,7 @@ namespace bank_system
 
         public int LoadAccounts()
         {
-            int accountCount = 100000;
+            int accountCount = Constants.initialAccountCount;
 
             if (File.Exists(Constants.accountTracker))
                 int.TryParse(ReadFile(Constants.accountTracker)[0], out accountCount);
@@ -109,6 +109,11 @@ namespace bank_system
             string accountFilePath = Path.Combine(Constants.accountsDir, accountNumber + ".txt");
 
             return accountFilePath;
+        }
+
+        private bool WriteToFile(string[] contents)
+        {
+            return true;
         }
     }
 }

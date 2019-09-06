@@ -20,7 +20,6 @@ namespace bank_system
             Console.Clear();
 
             fileHelper.CreateDirectory(Constants.accountsDir);
-            fileHelper.LoadAccounts();
             bool loginSuccess = false;
 
             do
