@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Runtime.Serialization;
 
 namespace bank_system
 {
@@ -147,11 +140,31 @@ namespace bank_system
 
         public User SearchAccount()
         {
-            User user = AccountLookup();
-            ViewAccount(user);
-            Console.WriteLine("Press any key to continue...");
-            Console.ReadKey();
-            
+            bool success = false;
+
+            do
+            {
+                Console.Clear();
+                User user = AccountLookup();
+                ViewAccount(user);
+                Console.Write("Search for another account (y/n) ? ");
+                string confirm = Console.ReadLine();
+                if (String.Equals(confirm.ToLower(), 'y'.ToString()))
+                {
+                    
+                }
+                else if (String.Equals(confirm.ToLower(), 'n'.ToString()))
+                {
+                    success = true;
+                }
+                else
+                {
+                    Console.WriteLine("Please enter 'y' or 'n' only.");
+                    System.Threading.Thread.Sleep(500);
+                }
+            }
+            while (!success);
+
 
             return user;
         }
@@ -162,7 +175,7 @@ namespace bank_system
 
             do
             {
-                User user = SearchAccount();
+                User user = AccountLookup();
                 Console.WriteLine("Delete Account (y/n)? ");
                 string confirm = Console.ReadLine();
                 if (String.Equals(confirm.ToLower(), 'y'.ToString()))
@@ -261,6 +274,33 @@ namespace bank_system
                 }
             }
             while (!success);
+        }
+
+        public void AcStatement()
+        {
+            User user = AccountLookup();
+            ViewAccount(user);
+            Console.Write("Email statement (y/n) ? ");
+            string confirm = Console.ReadLine();
+            do
+            {
+                if (String.Equals(confirm.ToLower(), 'y'.ToString()))
+                {
+                    Console.WriteLine("Statement sent to {0}. The email should arrive shortly.", user.id);
+                    System.Threading.Thread.Sleep(750);
+                    break;
+                }
+                else if (String.Equals(confirm.ToLower(), 'n'.ToString()))
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Please enter 'y' or 'n' only.");
+                    System.Threading.Thread.Sleep(500);
+                }
+            }
+            while (true);
         }
 
         private User LoadAccount(int accountNumber)

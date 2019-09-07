@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace bank_system
 {
@@ -31,7 +27,6 @@ namespace bank_system
                 int cursorPosTopPwd = Console.CursorTop;
                 Console.WriteLine("                           ║");
 
-                /* \n is essential so it doesn't affect the input interface*/
                 Console.WriteLine("╚══════════════════════════════════════╝");
                 Console.SetCursorPosition(cursorPosLeftUserName, cursorPosTopUserName);
                 userName = Console.ReadLine();
