@@ -115,6 +115,7 @@ namespace bank_system
             } while(!success);
 
             fileHelper.SerializeAccount(AccountFileName(user), user);
+            fileHelper.SaveAccountCount(accountCounter.ToString());
         }
 
         private User AccountLookup()
