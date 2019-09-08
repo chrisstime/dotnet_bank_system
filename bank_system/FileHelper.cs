@@ -23,10 +23,16 @@ namespace bank_system
 
         public int LoadAccounts()
         {
-            int accountCount = Constants.initialAccountCount;
+            int accountCount;
 
             if (File.Exists(Constants.accountTracker))
+            {
                 int.TryParse(ReadFile(Constants.accountTracker)[0], out accountCount);
+            }
+            else
+            {
+                accountCount = Constants.initialAccountCount;
+            }
 
             return accountCount;
         }
@@ -111,9 +117,16 @@ namespace bank_system
             return accountFilePath;
         }
 
-        private bool WriteToFile(string[] contents)
+        public void SaveAccountCount(string accountCounter)
         {
-            return true;
+            try
+            {
+                File.WriteAllText(Constants.accountTracker, accountCounter);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }
