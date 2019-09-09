@@ -131,7 +131,7 @@ namespace bank_system
                 else
                 {
                     Console.WriteLine("Account does not exist. Please try again.");
-                    System.Threading.Thread.Sleep(500);
+                    System.Threading.Thread.Sleep(1000);
                 }
             }
             while (!success);
@@ -189,7 +189,7 @@ namespace bank_system
                 else
                 {
                     Console.WriteLine("Please enter 'y' or 'n' only.");
-                    System.Threading.Thread.Sleep(500);
+                    System.Threading.Thread.Sleep(750);
                 }
             }
             while (!success);
@@ -223,7 +223,7 @@ namespace bank_system
                 if (!int.TryParse(userInput, out int amount))
                 {
                     Console.WriteLine("\n{0} Must be a number. Please input an amount.", userInput);
-                    System.Threading.Thread.Sleep(500);
+                    System.Threading.Thread.Sleep(750);
                 }
                 else if (amount > user.balance)
                 {
@@ -258,12 +258,12 @@ namespace bank_system
                 if (!int.TryParse(userInput, out int amount))
                 {
                     Console.WriteLine("\n{0} Must be a number. Please input an amount.", userInput);
-                    System.Threading.Thread.Sleep(500);
+                    System.Threading.Thread.Sleep(750);
                 }
                 else if (amount <= -1)
                 {
                     Console.WriteLine("\n Deposit can't be negative. Please input a positive number or use the withdraw functionality instead.");
-                    System.Threading.Thread.Sleep(500);
+                    System.Threading.Thread.Sleep(750);
                 }
                 else
                 {
@@ -298,7 +298,7 @@ namespace bank_system
                 else
                 {
                     Console.WriteLine("Please enter 'y' or 'n' only.");
-                    System.Threading.Thread.Sleep(500);
+                    System.Threading.Thread.Sleep(750);
                 }
             }
             while (true);
