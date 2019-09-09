@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace bank_system
 {
@@ -83,7 +79,7 @@ namespace bank_system
                     accountManager.Withdraw();
                     break;
                 case 5:
-
+                    accountManager.AcStatement();
                     break;
                 case 6:
                     accountManager.DeleteAccount();
