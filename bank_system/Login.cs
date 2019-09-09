@@ -80,12 +80,14 @@ namespace bank_system
             FileHelper fileHelper = new FileHelper();
             string[] fileContent = fileHelper.ReadFile("login.txt");
             bool allowAccess = false;
-            char delimeterChar = ' ';
+            char delimeterChar = '|';
 
             foreach (string line in fileContent)
             {
                 string[] credentials = line.Split(delimeterChar);
                 allowAccess = String.Equals(credentials[0], userName) && String.Equals(credentials[1], passWord);
+                if (allowAccess)
+                    break;
             }
 
             return allowAccess;
