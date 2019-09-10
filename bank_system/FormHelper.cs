@@ -11,22 +11,27 @@ namespace bank_system
      */
     class FormHelper
     {
-        public bool Confirm(string SuccessMessage)
+        public bool Confirm(string YMessage, string NMessage)
         {
             string confirm = Console.ReadLine();
 
             if (String.Equals(confirm.ToLower(), 'y'.ToString()))
             {
-                Console.WriteLine(SuccessMessage);
-                System.Threading.Thread.Sleep(1500);
+                Console.WriteLine(YMessage);
+                System.Threading.Thread.Sleep(750);
                 return true;
+            }
+            else if (String.Equals(confirm.ToLower(), 'n'.ToString()))
+            {
+                Console.WriteLine(NMessage);
+                System.Threading.Thread.Sleep(750);
             }
             else
             {
                 Console.WriteLine("Please enter 'y' or 'n' only.");
-                System.Threading.Thread.Sleep(500);
-                return false;
+                System.Threading.Thread.Sleep(750);
             }
+            return false;
         }
     }
 }
