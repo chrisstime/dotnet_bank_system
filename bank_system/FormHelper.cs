@@ -9,7 +9,7 @@ namespace bank_system
      */
     class FormHelper
     {
-        public bool Confirm(string YMessage, string NMessage)
+        public static bool Confirm(string YMessage, string NMessage)
         {
             string confirm = Console.ReadLine();
 
@@ -32,19 +32,8 @@ namespace bank_system
             return false;
         }
 
-        public string MobileNumberValidator()
+        public static string ValidateMobileNumber()
         {
-            //int mobileNumber;
-            //do
-            //{
-
-            //    if (Regex.Match(Number, @"^(\[0-9]{10})$").Success)
-            //    {
-            //        int.TryParse(Number, out mobileNumber);
-            //        break;
-            //    }
-            //} while (true);
-
             string input = "";
             ConsoleKeyInfo key;
 
@@ -71,6 +60,15 @@ namespace bank_system
                 }
             }
             while (key.Key != ConsoleKey.Enter);
+
+            return input;
+        }
+
+        public static string ValidateEmail()
+        {
+            string input = "";
+
+
 
             return input;
         }

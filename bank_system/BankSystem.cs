@@ -16,10 +16,9 @@ namespace bank_system
         {
             myBankLogin = new Login();            
             menu = new Menu();
-            fileHelper = new FileHelper();
             Console.Clear();
 
-            fileHelper.CreateDirectory(Constants.accountsDir);
+            FileHelper.CreateDirectory(Constants.accountsDir);
             bool loginSuccess = false;
 
             do

@@ -4,31 +4,24 @@ namespace bank_system
 {
     class Account
     {
-        private static FileHelper fileHelper = new FileHelper();
-        User user;
         private int accountCounter;
 
         [Serializable]
         public class User
         {
-            public string fName, lName, address, email;
-            public int id, phoneNumber, balance;
-        }
-
-        public Account(int accountCounter)
-        {
-            this.accountCounter = accountCounter;
+            public int id, balance;
+            public string fName, lName, address, phoneNumber, email;
         }
 
         public Account()
         {
-            
+            this.accountCounter = FileHelper.LoadAccounts();
         }
 
         public void CreateAccount()
         {
             bool success = false;
-            user = new User();
+            User user = new User();
             GenerateId(user);
             user.balance = 0;
 
@@ -78,9 +71,7 @@ namespace bank_system
                 user.address = Console.ReadLine();
 
                 Console.SetCursorPosition(cursorPosLeftPhone, cursorPosTopPhone);
-                string phoneInput = Console.ReadLine();
-                phoneInput = phoneInput.Substring(0, 9);
-                int.TryParse(phoneInput, out user.phoneNumber);
+                user.phoneNumber = FormHelper.ValidateMobileNumber();
 
                 Console.SetCursorPosition(cursorPosLeftEmail, cursorPosTopEmail);
                 user.email = Console.ReadLine();
@@ -107,8 +98,8 @@ namespace bank_system
                 }
             } while(!success);
 
-            fileHelper.SerializeAccount(AccountFileName(user), user);
-            fileHelper.SaveAccountCount(accountCounter.ToString());
+            FileHelper.SerializeAccount(AccountFileName(user), user);
+            FileHelper.SaveAccountCount(accountCounter.ToString());
         }
 
         private User AccountLookup()
@@ -139,14 +130,15 @@ namespace bank_system
             return user;
         }
 
-        public User SearchAccount()
+        public User Search()
         {
+            User user = new User();
             bool success = false;
 
             do
             {
                 Console.Clear();
-                User user = AccountLookup();
+                user = AccountLookup();
                 ViewAccount(user);
                 Console.Write("Search for another account (y/n) ? ");
                 string confirm = Console.ReadLine();
@@ -184,7 +176,7 @@ namespace bank_system
                     success = true;
                     Console.WriteLine("Account number {0} has been deleted", user.id);
                     System.Threading.Thread.Sleep(750);
-                    fileHelper.DeleteAccountFile(user.id);
+                    FileHelper.DeleteAccountFile(user.id);
                 }
                 else
                 {
@@ -234,7 +226,7 @@ namespace bank_system
                 {
                     user.balance -= amount;
                     Console.WriteLine("Withdraw successful! The remaining balance for the user is: ${0}", user.balance);
-                    fileHelper.SerializeAccount(AccountFileName(user), user);
+                    FileHelper.SerializeAccount(AccountFileName(user), user);
                     success = true;
                     System.Threading.Thread.Sleep(750);
                 }
@@ -269,7 +261,7 @@ namespace bank_system
                 {
                     user.balance += amount;
                     Console.WriteLine("Deposit successful! The new balance for the user is: ${0}", user.balance);
-                    fileHelper.SerializeAccount(AccountFileName(user), user);
+                    FileHelper.SerializeAccount(AccountFileName(user), user);
                     success = true;
                     System.Threading.Thread.Sleep(750);
                 }
@@ -306,7 +298,7 @@ namespace bank_system
 
         private User LoadAccount(int accountNumber)
         {
-            return fileHelper.DeserializeAccount(accountNumber);
+            return FileHelper.DeserializeAccount(accountNumber);
         }
 
         private string AccountFileName(User user)

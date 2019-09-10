@@ -7,21 +7,21 @@ namespace bank_system
 {
     class FileHelper
     {
-        public void CreateDirectory(string subDirectory)
+        public static void CreateDirectory(string subDirectory)
         {
             string newDir = Path.Combine(Constants.projectDir, subDirectory);
             if (!File.Exists(newDir))
                 Directory.CreateDirectory(newDir);
         }
 
-        public string[] ReadFile(string textFile)
+        public static string[] ReadFile(string textFile)
         {
             string[] fileContent = File.ReadAllLines(textFile);
 
             return fileContent;
         }
 
-        public int LoadAccounts()
+        public static int LoadAccounts()
         {
             int accountCount;
 
@@ -37,7 +37,7 @@ namespace bank_system
             return accountCount;
         }
 
-        public bool SerializeAccount(string textFile, Account.User user)
+        public static bool SerializeAccount(string textFile, Account.User user)
         {
             bool success = false;
             string newAccountFilePath = Path.Combine(Constants.accountsDir, textFile);
@@ -65,7 +65,7 @@ namespace bank_system
             return success;
         }
 
-        public Account.User DeserializeAccount(int accountNumber)
+        public static Account.User DeserializeAccount(int accountNumber)
         {
             Account.User user = new Account.User();
             string filePath = AccountPath(accountNumber);
@@ -89,7 +89,7 @@ namespace bank_system
             return user;
         }
 
-        public bool DeleteAccountFile(int accountNumber)
+        public static bool DeleteAccountFile(int accountNumber)
         {
             string filePath = AccountPath(accountNumber);
             bool success = false;
@@ -110,14 +110,14 @@ namespace bank_system
             return success;
         }
 
-        private string AccountPath(int accountNumber)
+        private static string AccountPath(int accountNumber)
         {
             string accountFilePath = Path.Combine(Constants.accountsDir, accountNumber + ".txt");
 
             return accountFilePath;
         }
 
-        public void SaveAccountCount(string accountCounter)
+        public static void SaveAccountCount(string accountCounter)
         {
             try
             {

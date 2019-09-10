@@ -77,8 +77,7 @@ namespace bank_system
 
         private bool Authenticate(string userName, string passWord)
         {
-            FileHelper fileHelper = new FileHelper();
-            string[] fileContent = fileHelper.ReadFile("login.txt");
+            string[] fileContent = FileHelper.ReadFile("login.txt");
             bool allowAccess = false;
             char delimeterChar = '|';
 

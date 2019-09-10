@@ -4,13 +4,11 @@ namespace bank_system
 {
     class Menu
     {
-        private static FileHelper fileHelper;
         private static Account accountManager;
 
         public Menu()
         {
-            fileHelper = new FileHelper();
-            accountManager = new Account(fileHelper.LoadAccounts());
+            accountManager = new Account();
         }
 
         public void MenuScreen()
