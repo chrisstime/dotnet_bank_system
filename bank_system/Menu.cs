@@ -70,7 +70,7 @@ namespace bank_system
                     accountManager.CreateAccount();
                     break;
                 case 2:
-                    accountManager.SearchAccount();
+                    accountManager.Search();
                     break;
                 case 3:
                     accountManager.Deposit();
