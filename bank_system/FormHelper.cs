@@ -42,8 +42,6 @@ namespace bank_system
                 key = Console.ReadKey(true);
                 if (key.Key != ConsoleKey.Backspace)
                 {
-                    //int val = 0;
-                    //bool keyIsANumber = int.TryParse(key.KeyChar.ToString(), out val);
                     if (Char.IsNumber(key.KeyChar) && input.Length < 9)
                     {
                         input += key.KeyChar;
@@ -64,13 +62,44 @@ namespace bank_system
             return input;
         }
 
-        public static string ValidateEmail()
+        public static string ValidateEmail(int cursorPosLeft, int cursorPosTop)
         {
-            string input = "";
+            string input;
+            string pattern = "(.)+(@gmail.com | @uts.edu.au | @outlook.com)";
+            Regex rg = new Regex(pattern, RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
 
+            do
+            {
+                Console.SetCursorPosition(cursorPosLeft, cursorPosTop);
+                input = Console.ReadLine();
 
+                if (rg.IsMatch(input))
+                {
+                    break;
+                }
+                else
+                {
+                    Console.Write(
+                        "\nEmail must have an @ and must belong to gmail.com, " +
+                        "outlook.com or uts.edu.au domain."
+                        );
+                    Console.SetCursorPosition(0, Console.CursorTop);
+                    ClearCurrentConsoleLine();
+                }
+                    
+            }
+            while (true);
 
             return input;
+        }
+
+        private static void ClearCurrentConsoleLine()
+        {
+            System.Threading.Thread.Sleep(1000);
+            int cursorPos = Console.CursorTop;
+            Console.SetCursorPosition(0, Console.CursorTop);
+            Console.Write(new string(' ', Console.WindowWidth));
+            Console.SetCursorPosition(0, cursorPos);
         }
     }
 }

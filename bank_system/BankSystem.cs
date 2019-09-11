@@ -9,7 +9,6 @@ namespace bank_system
     class BankSystem
     {
         private static Login myBankLogin;
-        private static FileHelper fileHelper;
         private static Menu menu;
 
         public static void Main(string[] args)
