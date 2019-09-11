@@ -9,19 +9,19 @@ namespace bank_system
      */
     class FormHelper
     {
-        public static bool Confirm(string YMessage, string NMessage)
+        public static bool Confirm(string yMessage, string nMessage)
         {
             string confirm = Console.ReadLine();
 
             if (String.Equals(confirm.ToLower(), 'y'.ToString()))
             {
-                Console.WriteLine(YMessage);
+                Console.WriteLine(yMessage);
                 System.Threading.Thread.Sleep(750);
                 return true;
             }
             else if (String.Equals(confirm.ToLower(), 'n'.ToString()))
             {
-                Console.WriteLine(NMessage);
+                Console.WriteLine(nMessage);
                 System.Threading.Thread.Sleep(750);
             }
             else
@@ -32,8 +32,27 @@ namespace bank_system
             return false;
         }
 
-        public static string ValidateMobileNumber()
+        public static int[] FormField(string formLabel)
         {
+            string formattedLabel = formLabel + ": ";
+            Console.Write("║ ");
+            int[] cursorPos = { Console.CursorLeft + formattedLabel.Length, Console.CursorTop };
+            Console.Write(formattedLabel.PadRight(Constants.defaultFormLength));
+            Console.WriteLine("║");
+
+            return cursorPos;
+        }
+
+        public static string ReadFormField(int[] cursorPos)
+        {
+            Console.SetCursorPosition(cursorPos[0], cursorPos[1]);
+
+            return Console.ReadLine();
+        }
+
+        public static string ReadFormFieldMobileNumber(int[] cursorPos)
+        {
+            Console.SetCursorPosition(cursorPos[0], cursorPos[1]);
             string input = "";
             ConsoleKeyInfo key;
 
@@ -62,7 +81,7 @@ namespace bank_system
             return input;
         }
 
-        public static string ValidateEmail(int cursorPosLeft, int cursorPosTop)
+        public static string ReadFormFieldEmail(int[] cursorPos)
         {
             string input;
             string pattern = "(.)+(@gmail.com | @uts.edu.au | @outlook.com)";
@@ -70,7 +89,7 @@ namespace bank_system
 
             do
             {
-                Console.SetCursorPosition(cursorPosLeft, cursorPosTop);
+                Console.SetCursorPosition(cursorPos[0], cursorPos[1]);
                 input = Console.ReadLine();
 
                 if (rg.IsMatch(input))
@@ -93,6 +112,25 @@ namespace bank_system
             return input;
         }
 
+        public static void Heading(string headingTitle)
+        {
+            int padding = Constants.defaultFormLength - headingTitle.Length;
+            int preTitlePadding;
+
+            if (padding % 2 == 1)
+            {
+                preTitlePadding = (padding - 1) / 2;
+            }
+            else
+            {
+                preTitlePadding = padding / 2;
+            }
+
+            Console.Write("║ ".PadRight(preTitlePadding));
+            Console.Write(headingTitle.PadRight(Constants.defaultFormLength - preTitlePadding));
+            Console.WriteLine("  ║");
+        }
+
         private static void ClearCurrentConsoleLine()
         {
             System.Threading.Thread.Sleep(1000);
@@ -100,6 +138,22 @@ namespace bank_system
             Console.SetCursorPosition(0, Console.CursorTop);
             Console.Write(new string(' ', Console.WindowWidth));
             Console.SetCursorPosition(0, cursorPos);
+        }
+
+        public static void DrawFormBox(FormBox formBox)
+        {
+            switch (formBox)
+            {
+                case FormBox.header:
+                    Console.WriteLine("╔═════════════════════════════════════════╗");
+                    break;
+                case FormBox.footer:
+                    Console.WriteLine("╚═════════════════════════════════════════╝");
+                    break;
+                case FormBox.formDivider:
+                    Console.WriteLine("╠═════════════════════════════════════════╣");
+                    break;
+            }
         }
     }
 }
