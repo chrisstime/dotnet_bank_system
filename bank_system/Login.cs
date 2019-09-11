@@ -12,26 +12,18 @@ namespace bank_system
             {
                 Console.Clear();
 
-                Console.WriteLine("╔══════════════════════════════════════╗");
-                Console.WriteLine("║   WELCOME TO ONLINE BANKING SYSTEM   ║");
-                Console.WriteLine("╠══════════════════════════════════════╣");
-                Console.WriteLine("║            Login to Start            ║");
+                FormHelper.DrawFormBox(FormBox.header);
+                FormHelper.Heading("WELCOME TO ONLINE BANKING SYSTEM", FontStyle.h1);
+                FormHelper.Heading("Login to Start", FontStyle.h2);
 
-                Console.Write("║ Username: ");
-                int cursorPosLeftUserName = Console.CursorLeft;
-                int cursorPosTopUserName = Console.CursorTop;
-                Console.WriteLine("                           ║");
+                int[] cursorPosUserName = FormHelper.FormField("User Name", FontStyle.label);
+                int[] cursorPosPassword = FormHelper.FormField("Password", FontStyle.label);
 
-                Console.Write("║ Password: ");
-                int cursorPosLeftPwd = Console.CursorLeft;
-                int cursorPosTopPwd = Console.CursorTop;
-                Console.WriteLine("                           ║");
+                FormHelper.DrawFormBox(FormBox.footer);
 
-                Console.WriteLine("╚══════════════════════════════════════╝");
-                Console.SetCursorPosition(cursorPosLeftUserName, cursorPosTopUserName);
-                userName = Console.ReadLine();
+                userName = FormHelper.ReadFormField(cursorPosUserName);
 
-                Console.SetCursorPosition(cursorPosLeftPwd, cursorPosTopPwd);
+                Console.SetCursorPosition(cursorPosPassword[0], cursorPosPassword[1]);
 
                 string passwdChar = "*";
 

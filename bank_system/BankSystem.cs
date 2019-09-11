@@ -18,7 +18,7 @@ namespace bank_system
             Console.Clear();
 
             FileHelper.CreateDirectory(Constants.accountsDir);
-            bool loginSuccess = false;
+            bool loginSuccess;
 
             do
             {

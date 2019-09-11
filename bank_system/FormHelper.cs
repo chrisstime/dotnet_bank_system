@@ -32,9 +32,9 @@ namespace bank_system
             return false;
         }
 
-        public static int[] FormField(string formLabel)
+        public static int[] FormField(string formLabel, FontStyle fontStyle)
         {
-            string formattedLabel = formLabel + ": ";
+            string formattedLabel = formLabel + (fontStyle == FontStyle.currency ? ": $" : ": ");
             Console.Write("║ ");
             int[] cursorPos = { Console.CursorLeft + formattedLabel.Length, Console.CursorTop };
             Console.Write(formattedLabel.PadRight(Constants.defaultFormLength));
@@ -50,7 +50,7 @@ namespace bank_system
             return Console.ReadLine();
         }
 
-        public static string ReadFormFieldMobileNumber(int[] cursorPos)
+        public static string ReadFormFieldNumber(int[] cursorPos)
         {
             Console.SetCursorPosition(cursorPos[0], cursorPos[1]);
             string input = "";
@@ -112,9 +112,9 @@ namespace bank_system
             return input;
         }
 
-        public static void Heading(string headingTitle)
+        public static void Heading(string heading, FontStyle headingStyle)
         {
-            int padding = Constants.defaultFormLength - headingTitle.Length;
+            int padding = Constants.defaultFormLength - heading.Length;
             int preTitlePadding;
 
             if (padding % 2 == 1)
@@ -127,8 +127,26 @@ namespace bank_system
             }
 
             Console.Write("║ ".PadRight(preTitlePadding));
-            Console.Write(headingTitle.PadRight(Constants.defaultFormLength - preTitlePadding));
+            Console.Write(heading.PadRight(Constants.defaultFormLength - preTitlePadding));
             Console.WriteLine("  ║");
+
+            if (headingStyle == FontStyle.h1)
+            {
+                DrawFormBox(FormBox.formDivider);
+            }
+            else if (headingStyle == FontStyle.h2)
+            {
+                Console.Write("║ ");
+                Console.Write("".PadRight(Constants.defaultFormLength));
+                Console.WriteLine("║");
+            }
+        }
+
+        public static void Body(string text)
+        {
+            Console.Write("║ ");
+            Console.Write(text.PadRight(Constants.defaultFormLength));
+            Console.WriteLine("║");
         }
 
         private static void ClearCurrentConsoleLine()

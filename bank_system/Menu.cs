@@ -20,26 +20,22 @@ namespace bank_system
             {
                 Console.Clear();
 
-                Console.WriteLine("╔══════════════════════════════════════╗");
-                Console.WriteLine("║   WELCOME TO ONLINE BANKING SYSTEM   ║");
-                Console.WriteLine("╠══════════════════════════════════════╣");
-                Console.WriteLine(
-                    "║ 1. Create a new account.             ║\n" +
-                    "║ 2. Search for an account.            ║\n" +
-                    "║ 3. Deposit                           ║\n" +
-                    "║ 4. Withdraw                          ║\n" +
-                    "║ 5. A/C Statement                     ║\n" +
-                    "║ 6. Delete Account                    ║\n" +
-                    "║ 7. Exit                              ║");
-                Console.WriteLine("╠══════════════════════════════════════╣");
-                Console.Write("║ Enter your choice (1-7): ");
-                int cursorPosLeftChoice = Console.CursorLeft;
-                int cursorPosTopChoice = Console.CursorTop;
-                Console.WriteLine("            ║");
-                Console.WriteLine("╚══════════════════════════════════════╝");
+                FormHelper.DrawFormBox(FormBox.header);
+                FormHelper.Heading("WELCOME TO ONLINE BANKING SYSTEM", FontStyle.h1);
+                FormHelper.Body("1. Create a new account.");
+                FormHelper.Body("2. Search for an account.");
+                FormHelper.Body("3. Deposit.");
+                FormHelper.Body("4. Withdraw.");
+                FormHelper.Body("5. A/C Statement.");
+                FormHelper.Body("6. Delete Account.");
+                FormHelper.Body("7. Exit.");
 
-                Console.SetCursorPosition(cursorPosLeftChoice, cursorPosTopChoice);
-                string userInput = Console.ReadLine();
+                FormHelper.DrawFormBox(FormBox.formDivider);
+                int[] cursorPosChoice = FormHelper.FormField("Enter your choice (1-7)", FontStyle.label);
+ 
+                FormHelper.DrawFormBox(FormBox.footer);
+
+                string userInput = FormHelper.ReadFormField(cursorPosChoice);
 
                 if (!int.TryParse(userInput, out choice))
                 {
@@ -84,6 +80,8 @@ namespace bank_system
                     break;
                 case 7:
                     Environment.Exit(0);
+                    break;
+                default:
                     break;
             }
         }
