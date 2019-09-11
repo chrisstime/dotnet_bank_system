@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace bank_system
 {
@@ -74,7 +75,7 @@ namespace bank_system
                 user.phoneNumber = FormHelper.ValidateMobileNumber();
 
                 Console.SetCursorPosition(cursorPosLeftEmail, cursorPosTopEmail);
-                user.email = Console.ReadLine();
+                user.email = FormHelper.ValidateEmail(cursorPosLeftEmail, cursorPosTopEmail);
 
                 
                 Console.Write("\nIs the information correct (y/n)? ");
@@ -112,7 +113,7 @@ namespace bank_system
                 Console.Clear();
                 Console.WriteLine("Search for Account Number: ");
                 int.TryParse(Console.ReadLine(), out int accountNumber);
-                if (accountNumber > Constants.initialAccountCount && accountNumber <= accountCounter)
+                if (File.Exists(FileHelper.AccountPath(accountNumber)))
                 {
                     Console.WriteLine("Account found! Loading account file...");
                     System.Threading.Thread.Sleep(500);
@@ -176,7 +177,14 @@ namespace bank_system
                     success = true;
                     Console.WriteLine("Account number {0} has been deleted", user.id);
                     System.Threading.Thread.Sleep(750);
-                    FileHelper.DeleteAccountFile(user.id);
+                    if (FileHelper.DeleteAccountFile(user.id))
+                    {
+                        if (user.id == accountCounter)
+                        {
+                            this.accountCounter -= 1;
+                            FileHelper.SaveAccountCount(accountCounter.ToString());
+                        }
+                    }
                 }
                 else
                 {
