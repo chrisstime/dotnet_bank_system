@@ -113,7 +113,7 @@ namespace bank_system
                 Console.Clear();
                 Console.WriteLine("Search for Account Number: ");
                 int.TryParse(Console.ReadLine(), out int accountNumber);
-                if (File.Exists(FileHelper.AccountPath(accountNumber)))
+                if (FileHelper.AccountExists(accountNumber))
                 {
                     Console.WriteLine("Account found! Loading account file...");
                     System.Threading.Thread.Sleep(500);
@@ -174,17 +174,10 @@ namespace bank_system
                 string confirm = Console.ReadLine();
                 if (String.Equals(confirm.ToLower(), 'y'.ToString()))
                 {
-                    success = true;
+                    
                     Console.WriteLine("Account number {0} has been deleted", user.id);
+                    success = FileHelper.DeleteAccountFile(user.id);
                     System.Threading.Thread.Sleep(750);
-                    if (FileHelper.DeleteAccountFile(user.id))
-                    {
-                        if (user.id == accountCounter)
-                        {
-                            this.accountCounter -= 1;
-                            FileHelper.SaveAccountCount(accountCounter.ToString());
-                        }
-                    }
                 }
                 else
                 {

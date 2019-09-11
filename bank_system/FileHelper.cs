@@ -40,11 +40,11 @@ namespace bank_system
         public static bool SerializeAccount(string textFile, Account.User user)
         {
             bool success = false;
-            string newAccountFilePath = Path.Combine(Constants.accountsDir, textFile);
+            string newAccountFilePath = AccountPath(user.id);
             try
             {
 
-                if (!File.Exists(newAccountFilePath))
+                if (!AccountExists(user.id))
                 {                   
                     File.Delete(newAccountFilePath);
                 }
@@ -68,8 +68,7 @@ namespace bank_system
         public static Account.User DeserializeAccount(int accountNumber)
         {
             Account.User user = new Account.User();
-            string filePath = AccountPath(accountNumber);
-            FileStream fs = new FileStream(filePath, FileMode.Open);
+            FileStream fs = new FileStream(AccountPath(accountNumber), FileMode.Open);
 
             try
             {
@@ -91,14 +90,13 @@ namespace bank_system
 
         public static bool DeleteAccountFile(int accountNumber)
         {
-            string filePath = AccountPath(accountNumber);
             bool success = false;
 
             try
             {
-                if (File.Exists(filePath))
+                if (AccountExists(accountNumber))
                 {
-                    File.Delete(Path.Combine(filePath));
+                    File.Delete(AccountPath(accountNumber));
                     success = true;
                 }
             }
@@ -112,9 +110,12 @@ namespace bank_system
 
         private static string AccountPath(int accountNumber)
         {
-            string accountFilePath = Path.Combine(Constants.accountsDir, accountNumber + ".txt");
+            return Path.Combine(Constants.accountsDir, accountNumber + ".txt");
+        }
 
-            return accountFilePath;
+        public static bool AccountExists(int accountNumber)
+        {
+            return File.Exists(AccountPath(accountNumber));
         }
 
         public static void SaveAccountCount(string accountCounter)
