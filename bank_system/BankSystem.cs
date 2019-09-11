@@ -9,18 +9,16 @@ namespace bank_system
     class BankSystem
     {
         private static Login myBankLogin;
-        private static FileHelper fileHelper;
         private static Menu menu;
 
         public static void Main(string[] args)
         {
             myBankLogin = new Login();            
             menu = new Menu();
-            fileHelper = new FileHelper();
             Console.Clear();
 
-            fileHelper.CreateDirectory(Constants.accountsDir);
-            bool loginSuccess = false;
+            FileHelper.CreateDirectory(Constants.accountsDir);
+            bool loginSuccess;
 
             do
             {

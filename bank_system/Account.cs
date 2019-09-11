@@ -1,89 +1,52 @@
 ﻿using System;
+using System.IO;
 
 namespace bank_system
 {
     class Account
     {
-        private static FileHelper fileHelper = new FileHelper();
-        User user;
         private int accountCounter;
 
         [Serializable]
         public class User
         {
-            public string fName, lName, address, email;
-            public int id, phoneNumber, balance;
-        }
-
-        public Account(int accountCounter)
-        {
-            this.accountCounter = accountCounter;
+            public int id, balance;
+            public string fName, lName, address, phoneNumber, email;
         }
 
         public Account()
         {
-            
+            this.accountCounter = FileHelper.LoadAccounts();
         }
 
         public void CreateAccount()
         {
             bool success = false;
-            user = new User();
+            User user = new User();
             GenerateId(user);
             user.balance = 0;
 
             do
             {
                 Console.Clear();
-               
-                Console.WriteLine("╔═════════════════════════════════╗");
-                Console.WriteLine("║     CREATE A NEW ACCOUNT        ║");
-                Console.WriteLine("╠═════════════════════════════════╣");
-                Console.WriteLine("║       ENTER THE DETAILS         ║");
 
-                Console.Write("║ First Name: ");
-                int cursorPosLeftFName = Console.CursorLeft;
-                int cursorPosTopFName = Console.CursorTop;
-                Console.WriteLine("                    ║");
+                FormHelper.DrawFormBox(FormBox.header);
+                FormHelper.Heading("CREATE A NEW ACCOUNT", FontStyle.h1);
+                FormHelper.Heading("ENTER THE DETAILS", FontStyle.h2);
 
-                Console.Write("║ Last Name: ");
-                int cursorPosLeftLName = Console.CursorLeft;
-                int cursorPosTopLName = Console.CursorTop;
-                Console.WriteLine("                     ║");
+                int[] cursorPosFName = FormHelper.FormField("First Name", FontStyle.label);
+                int[] cursorPosLName = FormHelper.FormField("Last Name", FontStyle.label);
+                int[] cursorPosAddress = FormHelper.FormField("Address", FontStyle.label);
+                int[] cursorPosPhone = FormHelper.FormField("Phone Number", FontStyle.label);
+                int[] cursorPosEmail = FormHelper.FormField("Email", FontStyle.label);
 
-                Console.Write("║ Address: ");
-                int cursorPosLeftAddress = Console.CursorLeft;
-                int cursorPosTopAddress = Console.CursorTop;
-                Console.WriteLine("                      ║");
+                FormHelper.DrawFormBox(FormBox.footer);
 
-                Console.Write("║ Phone Number: ");
-                int cursorPosLeftPhone = Console.CursorLeft;
-                int cursorPosTopPhone = Console.CursorTop;
-                Console.WriteLine("                 ║");
-
-                Console.Write("║ Email: ");
-                int cursorPosLeftEmail = Console.CursorLeft;
-                int cursorPosTopEmail = Console.CursorTop;
-                Console.WriteLine("                        ║");
-
-                Console.WriteLine("╚═════════════════════════════════╝");
-
-                Console.SetCursorPosition(cursorPosLeftFName, cursorPosTopFName);
-                user.fName = Console.ReadLine();
-
-                Console.SetCursorPosition(cursorPosLeftLName, cursorPosTopLName);
-                user.lName = Console.ReadLine();
-
-                Console.SetCursorPosition(cursorPosLeftAddress, cursorPosTopAddress);
-                user.address = Console.ReadLine();
-
-                Console.SetCursorPosition(cursorPosLeftPhone, cursorPosTopPhone);
-                string phoneInput = Console.ReadLine();
-                phoneInput = phoneInput.Substring(0, 9);
-                int.TryParse(phoneInput, out user.phoneNumber);
-
-                Console.SetCursorPosition(cursorPosLeftEmail, cursorPosTopEmail);
-                user.email = Console.ReadLine();
+                user.fName = FormHelper.ReadFormField(cursorPosFName);
+                user.lName = FormHelper.ReadFormField(cursorPosLName);
+                user.address = FormHelper.ReadFormField(cursorPosAddress);
+                user.phoneNumber = FormHelper.ReadFormFieldNumber(cursorPosPhone);
+                user.email = FormHelper.ReadFormFieldEmail(cursorPosEmail);
 
                 
                 Console.Write("\nIs the information correct (y/n)? ");
@@ -96,7 +59,7 @@ namespace bank_system
                 if (String.Equals(confirm.ToLower(), 'y'.ToString()))
                 {
                     success = true;
-                    Console.WriteLine("Account created successfully! Details will be provided via email.");
+                    Console.WriteLine("\n\nAccount created successfully! Details will be provided via email.");
                     Console.WriteLine("Account number is: {0}", user.id);
                     System.Threading.Thread.Sleep(1500);
                 }
@@ -107,11 +70,43 @@ namespace bank_system
                 }
             } while(!success);
 
-            fileHelper.SerializeAccount(AccountFileName(user), user);
-            fileHelper.SaveAccountCount(accountCounter.ToString());
+            FileHelper.SerializeAccount(AccountFileName(user), user);
+            FileHelper.SaveAccountCount(accountCounter.ToString());
         }
 
-        private User AccountLookup()
+        private User AccountLookup(string heading)
+        {
+            User user = new User();
+
+            do
+            {
+                Console.Clear();
+                FormHelper.DrawFormBox(FormBox.header);
+                FormHelper.Heading(heading, FontStyle.h1);
+                FormHelper.Heading("ENTER THE DETAILS", FontStyle.h2);
+                int[] cursorPosInput = FormHelper.FormField("Search for Account Number", FontStyle.label);
+                FormHelper.DrawFormBox(FormBox.footer);
+                int.TryParse(FormHelper.ReadFormField(cursorPosInput), out int accountNumber);
+
+                if (FileHelper.AccountExists(accountNumber))
+                {
+                    Console.WriteLine("\nAccount found! Loading account file...");
+                    System.Threading.Thread.Sleep(500);
+                    user = LoadAccount(accountNumber);
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("\nAccount does not exist. Please try again.");
+                    System.Threading.Thread.Sleep(1000);
+                }     
+            }
+            while (true);
+
+            return user;
+        }
+
+        public User Search()
         {
             User user = new User();
             bool success = false;
@@ -119,49 +114,21 @@ namespace bank_system
             do
             {
                 Console.Clear();
-                Console.WriteLine("Search for Account Number: ");
-                int.TryParse(Console.ReadLine(), out int accountNumber);
-                if (accountNumber > Constants.initialAccountCount && accountNumber <= accountCounter)
-                {
-                    Console.WriteLine("Account found! Loading account file...");
-                    System.Threading.Thread.Sleep(500);
-                    user = LoadAccount(accountNumber);
-                    success = true;
-                }
-                else
-                {
-                    Console.WriteLine("Account does not exist. Please try again.");
-                    System.Threading.Thread.Sleep(1000);
-                }
-            }
-            while (!success);
-
-            return user;
-        }
-
-        public User SearchAccount()
-        {
-            bool success = false;
-
-            do
-            {
-                Console.Clear();
-                User user = AccountLookup();
+                user = AccountLookup("SEARCH AN ACCOUNT");
                 ViewAccount(user);
+
                 Console.Write("Search for another account (y/n) ? ");
                 string confirm = Console.ReadLine();
-                if (String.Equals(confirm.ToLower(), 'y'.ToString()))
+
+                if (String.Equals(confirm.ToLower(), 'n'.ToString()))
                 {
-                    
+                    break;
                 }
-                else if (String.Equals(confirm.ToLower(), 'n'.ToString()))
-                {
-                    success = true;
-                }
-                else
+                else if (!String.Equals(confirm.ToLower(), 'y'.ToString()))
                 {
                     Console.WriteLine("Please enter 'y' or 'n' only.");
                     System.Threading.Thread.Sleep(500);
+
                 }
             }
             while (!success);
@@ -176,15 +143,15 @@ namespace bank_system
 
             do
             {
-                User user = AccountLookup();
+                User user = AccountLookup("DELETE AN ACCOUNT");
                 Console.WriteLine("Delete Account (y/n)? ");
                 string confirm = Console.ReadLine();
                 if (String.Equals(confirm.ToLower(), 'y'.ToString()))
                 {
-                    success = true;
+                    
                     Console.WriteLine("Account number {0} has been deleted", user.id);
+                    success = FileHelper.DeleteAccountFile(user.id);
                     System.Threading.Thread.Sleep(750);
-                    fileHelper.DeleteAccountFile(user.id);
                 }
                 else
                 {
@@ -198,45 +165,52 @@ namespace bank_system
 
         private void ViewAccount(User user)
         {
-            Console.WriteLine("Account No: {0}", user.id);
-            Console.WriteLine("Account Balance: ${0}", user.balance);
-            Console.WriteLine("First Name: {0}", user.fName);
-            Console.WriteLine("Last Name: {0}", user.fName);
-            Console.WriteLine("Address: {0}", user.address);
-            Console.WriteLine("Phone Number: {0}", user.phoneNumber);
-            Console.WriteLine("Email: {0}", user.email);
+            FormHelper.DrawFormBox(FormBox.header);
+            FormHelper.Heading("ACCOUNT DETAILS", FontStyle.h1);
+            FormHelper.Body("Account No: " + user.id);
+            FormHelper.Body("Account Balance: $" + user.balance);
+            FormHelper.Body("First Name: " + user.fName);
+            FormHelper.Body("Last Name: " + user.fName);
+            FormHelper.Body("Address: " + user.address);
+            FormHelper.Body("Phone Number: " + user.phoneNumber);
+            FormHelper.Body("Email: " + user.email);
+            FormHelper.DrawFormBox(FormBox.footer);
         }
 
         public void Withdraw()
         {
             bool success = false;
-            User user = AccountLookup();
+            User user = AccountLookup("WITHDRAW");
 
             do
             {
                 Console.Clear();
 
-                Console.WriteLine("Account No: {0}", user.id);
-                Console.Write("Amount: $");
-                string userInput = Console.ReadLine();
+                FormHelper.Heading("WITHDRAW", FontStyle.h1);
+                FormHelper.Heading("ENTER THE DETAILS", FontStyle.h2);
+                FormHelper.Body("Account No: " + user.id);
+                int[] cursorPosAmount = FormHelper.FormField("Amount", FontStyle.currency);
+                FormHelper.DrawFormBox(FormBox.footer);
 
-                if (!int.TryParse(userInput, out int amount))
+                string inputAmount = FormHelper.ReadFormFieldNumber(cursorPosAmount);
+
+                if (!int.TryParse(inputAmount, out int amount))
                 {
-                    Console.WriteLine("\n{0} Must be a number. Please input an amount.", userInput);
-                    System.Threading.Thread.Sleep(750);
+                    Console.WriteLine("\n{0} Must be a number. Please input an amount.", inputAmount);
+                    System.Threading.Thread.Sleep(1000);
                 }
                 else if (amount > user.balance)
                 {
                     Console.WriteLine("\nThe amount is greater than the balance. You may only withdraw less than or equal to the account balance.");
-                    System.Threading.Thread.Sleep(500);
+                    System.Threading.Thread.Sleep(1000);
                 }
                 else
                 {
                     user.balance -= amount;
-                    Console.WriteLine("Withdraw successful! The remaining balance for the user is: ${0}", user.balance);
-                    fileHelper.SerializeAccount(AccountFileName(user), user);
+                    Console.WriteLine("\nWithdraw successful! The remaining balance for the user is: ${0}", user.balance);
+                    FileHelper.SerializeAccount(AccountFileName(user), user);
                     success = true;
-                    System.Threading.Thread.Sleep(750);
+                    System.Threading.Thread.Sleep(1000);
                 }
             }
             while (!success);
@@ -244,42 +218,44 @@ namespace bank_system
 
         public void Deposit()
         {
-            bool success = false;
-            User user = AccountLookup();
+            User user = AccountLookup("DEPOSIT");
 
             do
             {
                 Console.Clear();
+                FormHelper.Heading("DEPOSIT", FontStyle.h1);
+                FormHelper.Heading("ENTER THE DETAILS", FontStyle.h2);
+                FormHelper.Body("Account No: " + user.id);
+                int[] cursorPosAmount = FormHelper.FormField("Amount", FontStyle.currency);
+                FormHelper.DrawFormBox(FormBox.footer);
 
-                Console.WriteLine("Account No: {0}", user.id);
-                Console.Write("Amount: $");
-                string userInput = Console.ReadLine();
+                string inputAmount = FormHelper.ReadFormFieldNumber(cursorPosAmount);
 
-                if (!int.TryParse(userInput, out int amount))
+                if (!int.TryParse(inputAmount, out int amount))
                 {
-                    Console.WriteLine("\n{0} Must be a number. Please input an amount.", userInput);
-                    System.Threading.Thread.Sleep(750);
+                    Console.WriteLine("\n\n Amount must be a number. Please input an amount.", inputAmount);
+                    System.Threading.Thread.Sleep(1000);
                 }
                 else if (amount <= -1)
                 {
-                    Console.WriteLine("\n Deposit can't be negative. Please input a positive number or use the withdraw functionality instead.");
-                    System.Threading.Thread.Sleep(750);
+                    Console.WriteLine("\n\n Deposit can't be negative. Please input a positive number or use the withdraw functionality instead.");
+                    System.Threading.Thread.Sleep(1000);
                 }
                 else
                 {
                     user.balance += amount;
-                    Console.WriteLine("Deposit successful! The new balance for the user is: ${0}", user.balance);
-                    fileHelper.SerializeAccount(AccountFileName(user), user);
-                    success = true;
-                    System.Threading.Thread.Sleep(750);
+                    Console.WriteLine("\n\n Deposit successful! The new balance for the user is: ${0}", user.balance);
+                    FileHelper.SerializeAccount(AccountFileName(user), user);
+                    System.Threading.Thread.Sleep(1000);
+                    break;
                 }
             }
-            while (!success);
+            while (true);
         }
 
         public void AcStatement()
         {
-            User user = AccountLookup();
+            User user = AccountLookup("STATEMENT");
             ViewAccount(user);
             Console.Write("Email statement (y/n) ? ");
             string confirm = Console.ReadLine();
@@ -288,7 +264,7 @@ namespace bank_system
                 if (String.Equals(confirm.ToLower(), 'y'.ToString()))
                 {
                     Console.WriteLine("Statement sent to {0}. The email should arrive shortly.", user.id);
-                    System.Threading.Thread.Sleep(750);
+                    System.Threading.Thread.Sleep(1000);
                     break;
                 }
                 else if (String.Equals(confirm.ToLower(), 'n'.ToString()))
@@ -306,7 +282,7 @@ namespace bank_system
 
         private User LoadAccount(int accountNumber)
         {
-            return fileHelper.DeserializeAccount(accountNumber);
+            return FileHelper.DeserializeAccount(accountNumber);
         }
 
         private string AccountFileName(User user)
