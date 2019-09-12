@@ -11,7 +11,7 @@ namespace bank_system
         private static Login myBankLogin;
         private static Menu menu;
 
-        public static void Main(string[] args)
+        private static void Main()
         {
             myBankLogin = new Login();            
             menu = new Menu();
