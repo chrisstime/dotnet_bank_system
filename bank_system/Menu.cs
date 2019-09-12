@@ -13,8 +13,6 @@ namespace bank_system
 
         public void MenuScreen()
         {
-            int choice = -1;
-
             Console.Clear();
             do
             {
@@ -37,7 +35,7 @@ namespace bank_system
 
                 string userInput = FormHelper.ReadFormField(cursorPosChoice);
 
-                if (!int.TryParse(userInput, out choice))
+                if (!int.TryParse(userInput, out int choice))
                 {
                     Console.WriteLine("\n{0} is not an a number. Please input a number between 1-7.", userInput);
                     System.Threading.Thread.Sleep(500);
@@ -56,7 +54,7 @@ namespace bank_system
             while (true);
         }
 
-        public void MenuChoice(int userChoice)
+        private void MenuChoice(int userChoice)
         {
             switch (userChoice)
             {

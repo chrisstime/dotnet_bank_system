@@ -37,14 +37,14 @@ namespace bank_system
             return accountCount;
         }
 
-        public static bool SerializeAccount(string textFile, Account.User user)
+        public static bool SerializeAccount(string textFile, User user)
         {
             bool success = false;
-            string newAccountFilePath = AccountPath(user.id);
+            string newAccountFilePath = AccountPath(user.Id);
             try
             {
 
-                if (!AccountExists(user.id))
+                if (!AccountExists(user.Id))
                 {                   
                     File.Delete(newAccountFilePath);
                 }
@@ -65,15 +65,15 @@ namespace bank_system
             return success;
         }
 
-        public static Account.User DeserializeAccount(int accountNumber)
+        public static User DeserializeAccount(int accountNumber)
         {
-            Account.User user = new Account.User();
+            User user = new User();
             FileStream fs = new FileStream(AccountPath(accountNumber), FileMode.Open);
 
             try
             {
                 BinaryFormatter formatter = new BinaryFormatter();
-                user = (Account.User)formatter.Deserialize(fs);
+                user = (User)formatter.Deserialize(fs);
             }
 
             catch (SerializationException e)
