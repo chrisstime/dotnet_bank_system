@@ -16,7 +16,16 @@ namespace bank_system
 
         public static string[] ReadFile(string textFile)
         {
-            string[] fileContent = File.ReadAllLines(textFile);
+            string[] fileContent = { };
+            try
+            {
+                if (File.Exists(Path.Combine(Constants.projectDir, textFile)))
+                    File.ReadAllLines(textFile);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
 
             return fileContent;
         }

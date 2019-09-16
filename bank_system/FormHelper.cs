@@ -16,18 +16,18 @@ namespace bank_system
             if (String.Equals(confirm.ToLower(), 'y'.ToString()))
             {
                 Console.WriteLine(yMessage);
-                System.Threading.Thread.Sleep(750);
+                System.Threading.Thread.Sleep(1000);
                 return true;
             }
             else if (String.Equals(confirm.ToLower(), 'n'.ToString()))
             {
                 Console.WriteLine(nMessage);
-                System.Threading.Thread.Sleep(750);
+                System.Threading.Thread.Sleep(1000);
             }
             else
             {
                 Console.WriteLine("Please enter 'y' or 'n' only.");
-                System.Threading.Thread.Sleep(750);
+                System.Threading.Thread.Sleep(1000);
             }
             return false;
         }
@@ -61,7 +61,7 @@ namespace bank_system
                 key = Console.ReadKey(true);
                 if (key.Key != ConsoleKey.Backspace)
                 {
-                    if (Char.IsNumber(key.KeyChar) && input.Length < 9)
+                    if (Char.IsNumber(key.KeyChar) && input.Length < 10)
                     {
                         input += key.KeyChar;
                         Console.Write(key.KeyChar);
@@ -102,6 +102,7 @@ namespace bank_system
                         "\nEmail must have an @ and must belong to gmail.com, " +
                         "outlook.com or uts.edu.au domain."
                         );
+                    System.Threading.Thread.Sleep(1500);
                     Console.SetCursorPosition(0, Console.CursorTop);
                     ClearCurrentConsoleLine();
                 }
