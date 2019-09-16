@@ -41,8 +41,8 @@ namespace bank_system
                 
                 if (String.Equals(confirm.ToLower(), 'y'.ToString()))
                 {
-                    FileHelper.SerializeAccount(AccountFileName(user.Id), user);
-                    FileHelper.SaveAccountCount((user.Id).ToString());
+                    FileHelper.SerializeAccount(user);
+                    FileHelper.SaveAccountCount(user.Id);
                     Console.WriteLine("\nAccount created successfully! Details will be provided via email.");
                     Console.WriteLine("Account number is: {0}", user.Id);
                     System.Threading.Thread.Sleep(1500);
@@ -187,7 +187,7 @@ namespace bank_system
                 {
                     user.Balance -= amount;
                     Console.WriteLine("\n\nWithdraw successful! The remaining balance for the user is: ${0}", user.Balance);
-                    FileHelper.SerializeAccount(AccountFileName(user.Id), user);
+                    FileHelper.SerializeAccount(user);
                     success = true;
                     System.Threading.Thread.Sleep(1000);
                 }
@@ -213,7 +213,7 @@ namespace bank_system
 
                 user.Balance += amount;
                 Console.WriteLine("\n\nDeposit successful! The new balance for the user is: ${0}", user.Balance);
-                FileHelper.SerializeAccount(AccountFileName(user.Id), user);
+                FileHelper.SerializeAccount(user);
                 System.Threading.Thread.Sleep(1000);
                 break;
             }
@@ -245,11 +245,6 @@ namespace bank_system
                 }
             }
             while (true);
-        }
-
-        private string AccountFileName(int userId)
-        {
-            return userId + ".txt";
         }
     } 
 }
