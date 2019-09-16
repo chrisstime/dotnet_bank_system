@@ -36,17 +36,13 @@ namespace bank_system
  
                 FormHelper.DrawFormBox(FormBox.footer);
 
-                string userInput = FormHelper.ReadFormField(cursorPosChoice);
+                string userInput = FormHelper.ReadFormFieldNumber(cursorPosChoice);
+                int choice = int.Parse(userInput);
                 
                 // Validate that input is an integer from 1-7.
-                if (!int.TryParse(userInput, out int choice))
+                if (choice < 1 || choice > 7)
                 {
-                    Console.WriteLine("\n{0} is not an a number. Please input a number between 1-7.", userInput);
-                    System.Threading.Thread.Sleep(500);
-                }
-                else if (choice < 1 || choice > 7)
-                {
-                    Console.WriteLine("\nPlease input a number between 1-7.", userInput);
+                    Console.WriteLine("\n\nPlease input a number between 1-7.", choice);
                     System.Threading.Thread.Sleep(500);
                 }
                 else

@@ -23,13 +23,14 @@ namespace bank_system
          * Params: the path of the file to read.
          * Returns a string array or each read line from the file.
          */
-        public static string[] ReadFile(string textFilePath)
+        public static string[] ReadFile(string textFile)
         {
-            string[] fileContent = { };
+            string[] fileContent = {};
+            string textFilePath = Path.Combine(Constants.projectDir, textFile);
             try
             {
-                if (File.Exists(Path.Combine(Constants.projectDir, textFile)))
-                    File.ReadAllLines(textFile);
+                if (File.Exists(textFilePath))
+                    fileContent = File.ReadAllLines(textFile);
             }
             catch (Exception e)
             {
@@ -66,7 +67,6 @@ namespace bank_system
          */
         public static bool SerializeAccount(User user)
         {
-            bool success = false;
             string newAccountFilePath = AccountPath(user.Id);
             try
             {
@@ -82,14 +82,14 @@ namespace bank_system
                 formatter.Serialize(stream, user);
                 stream.Close();
 
-                success =  true;
+                return true;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
 
-            return success;
+            return false;
         }
 
         /*
