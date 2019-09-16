@@ -13,7 +13,7 @@ namespace bank_system
     class User
     {
         public int Id { get; } = FileHelper.LoadAccounts() + 1;
-        public int Balance { get; set; } = 0;
+        public double Balance { get; set; } = 0.0;
         public string FName { get; set; } = "";
         public string LName { get; set; } = "";
         public string Address { get; set; } = "";

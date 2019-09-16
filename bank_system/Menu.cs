@@ -66,7 +66,7 @@ namespace bank_system
                     accountManager.CreateAccount();
                     break;
                 case 2:
-                    accountManager.SearchAccountTo("SEARCH AN ACCOUNT");
+                    accountManager.Search();
                     break;
                 case 3:
                     accountManager.Deposit();

@@ -35,11 +35,6 @@ namespace bank_system
                 user.PhoneNumber = FormHelper.ReadFormFieldNumber(cursorPosPhone);
                 user.Email = FormHelper.ReadFormFieldEmail(cursorPosEmail);
 
-                //Console.Write("\nIs the information correct (y/n)? ");
-                //int cursorPosLeftConfirm = Console.CursorLeft;
-                //int cursorPosTopConfirm = Console.CursorTop;
-
-                //Console.SetCursorPosition(cursorPosLeftConfirm, cursorPosTopConfirm);
                 bool confirm = Confirm("\nIs the information correct (y/n)? ");
                 
                 if (confirm)
@@ -61,11 +56,8 @@ namespace bank_system
          * Param: the title for the screen which describes the context on which the account is being searched, 
          *        i.e. searching if an account exists for deletion, deposit or withdrawal.
          */
-        private User AccountLookup(string heading)
+        private int SearchAccountNumberTo(string heading)
         {
-            _ = new User();
-            User user;
-
             do
             {
                 Console.Clear();
@@ -80,24 +72,23 @@ namespace bank_system
                 {
                     Console.WriteLine("\nAccount found! Loading account file...");
                     System.Threading.Thread.Sleep(500);
-                    user = FileHelper.DeserializeAccount(accountNumber);
-                    break;
+                    return accountNumber;
                 }
                 else
                 {
                     Console.WriteLine("\nAccount does not exist.");
-                    System.Threading.Thread.Sleep(1000);
+                    bool searchAgain = Confirm("Search for another account (y/n) ? ");
+                    if (!searchAgain)
+                        return -1;
                 }
             }
             while (true);
-
-            return user;
         }
 
         /*
          * Method for the search interface in the program.
          */
-        public User SearchAccountTo(string purpose)
+        public void Search()
         {
             _ = new User();
             User user;
@@ -105,20 +96,21 @@ namespace bank_system
             do
             {
                 Console.Clear();
-                user = AccountLookup(purpose);
-                ViewAccount(user);
-
-                bool confirm = Confirm("Search for another account (y/n) ? ");
-
-                if (!confirm)
+                int accountNumber = SearchAccountNumberTo("SEARCH AN ACCOUNT");
+                if(accountNumber != -1)
+                {
+                    user = FileHelper.DeserializeAccount(accountNumber);
+                    ViewAccount(user);
+                }
+                else
+                {
                     break;
+                }
             }
             while (true);
 
             Console.WriteLine("Returning to main menu...");
             System.Threading.Thread.Sleep(1000);
-
-            return user;
         }
 
         /*
@@ -130,13 +122,26 @@ namespace bank_system
 
             do
             {
-                User user = SearchAccountTo("DELETE AN ACCOUNT");
-                bool confirm = Confirm("Delete Account (y/n)? ");
-                if (confirm)
+                int accountNumber = SearchAccountNumberTo("DELETE AN ACCOUNT");
+                if (accountNumber != -1)
                 {
-                    success = FileHelper.DeleteAccountFile(user.Id);
-                    if (success)
-                        Console.WriteLine("Account number {0} has been deleted", user.Id);
+                    User user = FileHelper.DeserializeAccount(accountNumber);
+                    bool confirm = Confirm("Delete Account (y/n)? ");
+
+                    if (confirm)
+                    {
+                        success = FileHelper.DeleteAccountFile(user.Id);
+                        if (success)
+                            Console.WriteLine("Account number {0} has been deleted", user.Id);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    break;
                 }
             }
             while (!success);
@@ -168,36 +173,53 @@ namespace bank_system
          */
         public void Withdraw()
         {
-            bool success = false;
-            User user = SearchAccountTo("WITHDRAW");
-
             do
             {
-                Console.Clear();
-
-                FormHelper.Heading("WITHDRAW", FontStyle.h1);
-                FormHelper.Heading("ENTER THE DETAILS", FontStyle.h2);
-                FormHelper.Body("Account No: " + user.Id);
-                int[] cursorPosAmount = FormHelper.FormField("Amount", FontStyle.currency);
-                FormHelper.DrawFormBox(FormBox.footer);
-
-                string inputAmount = FormHelper.ReadFormFieldNumber(cursorPosAmount);
-                int amount = int.Parse(inputAmount);
-                
-                // Only allow withdrawal if the amount being withdrawn is greater than or equal to the account balance.
-                if (amount > user.Balance)
+                int accountNumber = SearchAccountNumberTo("WITHDRAW");
+                if (accountNumber != -1)
                 {
-                    Console.WriteLine("\n\nThe amount is greater than the balance. You may only withdraw less than or equal to the account balance.");
+                    User user = FileHelper.DeserializeAccount(accountNumber);
+                    bool success = false;
+
+                    do
+                    {
+                        Console.Clear();
+
+                        FormHelper.Heading("WITHDRAW", FontStyle.h1);
+                        FormHelper.Heading("ENTER THE DETAILS", FontStyle.h2);
+                        FormHelper.Body("Account No: " + user.Id);
+                        int[] cursorPosAmount = FormHelper.FormField("Amount", FontStyle.currency);
+                        FormHelper.DrawFormBox(FormBox.footer);
+
+                        string inputAmount = FormHelper.ReadFormFieldNumber(cursorPosAmount);
+
+                        // Only allow withdrawal if the amount being withdrawn is greater than or equal to the account balance.
+                        if (double.TryParse(inputAmount, out double amount))
+                        {
+                            if (amount > user.Balance)
+                            {
+                                Console.WriteLine("\n\nThe amount is greater than the balance. You may only withdraw less than or equal to the account balance.");
+                            }
+                            else
+                            {
+                                user.Balance -= amount;
+                                Console.WriteLine("\n\nWithdraw successful! The remaining balance for the user is: ${0}", user.Balance);
+                                success = FileHelper.SerializeAccount(user);
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Deposit unsuccessful. Please try again.");
+                        }
+                    }
+                    while (!success);
                 }
                 else
                 {
-                    user.Balance -= amount;
-                    Console.WriteLine("\n\nWithdraw successful! The remaining balance for the user is: ${0}", user.Balance);
-                    success = FileHelper.SerializeAccount(user);
+                    break;
                 }
-            }
-            while (!success);
-
+            } while (true);
+            
             Console.WriteLine("Returning to main menu...");
             System.Threading.Thread.Sleep(1000);
         }
@@ -207,28 +229,46 @@ namespace bank_system
          */
         public void Deposit()
         {
-            User user = SearchAccountTo("DEPOSIT");
-
             do
             {
-                Console.Clear();
-                FormHelper.Heading("DEPOSIT", FontStyle.h1);
-                FormHelper.Heading("ENTER THE DETAILS", FontStyle.h2);
-                FormHelper.Body("Account No: " + user.Id);
-                int[] cursorPosAmount = FormHelper.FormField("Amount", FontStyle.currency);
-                FormHelper.DrawFormBox(FormBox.footer);
-
-                string inputAmount = FormHelper.ReadFormFieldNumber(cursorPosAmount);
-                int amount = int.Parse(inputAmount);
-                user.Balance += amount;
-
-                if (FileHelper.SerializeAccount(user))
+                int accountNumber = SearchAccountNumberTo("DEPOSIT");
+                if (accountNumber != -1)
                 {
-                    Console.WriteLine("\n\nDeposit successful! The new balance for the user is: ${0}", user.Balance);
+                    User user = FileHelper.DeserializeAccount(accountNumber);
+
+                    do
+                    {
+                        Console.Clear();
+                        FormHelper.Heading("DEPOSIT", FontStyle.h1);
+                        FormHelper.Heading("ENTER THE DETAILS", FontStyle.h2);
+                        FormHelper.Body("Account No: " + user.Id);
+                        int[] cursorPosAmount = FormHelper.FormField("Amount", FontStyle.currency);
+                        FormHelper.DrawFormBox(FormBox.footer);
+
+                        string inputAmount = FormHelper.ReadFormFieldNumber(cursorPosAmount);
+                        if (double.TryParse(inputAmount, out double amount))
+                        {
+                            user.Balance += amount;
+
+                            if (FileHelper.SerializeAccount(user))
+                            {
+                                Console.WriteLine("\n\nDeposit successful! The new balance for the user is: ${0}", user.Balance);
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Deposit unsuccessful. Please try again.");
+                        }
+                    }
+                    while (true);
+                }
+                else
+                {
                     break;
                 }
-            }
-            while (true);
+            } while (true);
+            
 
             Console.WriteLine("Returning to main menu...");
             System.Threading.Thread.Sleep(1000);
@@ -239,14 +279,24 @@ namespace bank_system
          */
         public void AcStatement()
         {
-            User user = SearchAccountTo("STATEMENT");
-            ViewAccount(user);
-
-            bool confirm = Confirm("Email statement (y/n) ? ");
-            if (confirm)
+            do
             {
-                Console.WriteLine("Statement sent to {0}. The email should arrive shortly.", user.Id);
-            }
+                int accountNumber = SearchAccountNumberTo("SEARCH AN ACCOUNT");
+                if (accountNumber != -1)
+                {
+                    User user = FileHelper.DeserializeAccount(accountNumber);
+                    ViewAccount(user);
+                    bool emailStatement = Confirm("Email statement (y/n) ? ");
+                    if (emailStatement)
+                    {
+                        Console.WriteLine("Statement sent to {0}. The email should arrive shortly.", user.Id);
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            } while (true);
 
             Console.WriteLine("Returning to main menu...");
             System.Threading.Thread.Sleep(1000);
