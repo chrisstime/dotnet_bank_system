@@ -57,7 +57,7 @@ namespace bank_system
                     passWord = "";
                     userName = "";
                     Console.WriteLine("Invalid Credentials. Press Try Again.");
-                    System.Threading.Thread.Sleep(500);
+                    System.Threading.Thread.Sleep(750);
                 }
                 else
                 {
@@ -69,7 +69,7 @@ namespace bank_system
             Console.WriteLine("Valid Credentials! Logging in...");
             System.Threading.Thread.Sleep(500);
 
-            return Authenticate(userName, passWord);
+            return true;
         }
 
         /*

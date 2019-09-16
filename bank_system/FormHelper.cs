@@ -104,8 +104,7 @@ namespace bank_system
                         "\nEmail must have an @ and must belong to gmail.com, " +
                         "outlook.com or uts.edu.au domain."
                         );
-                    System.Threading.Thread.Sleep(1500);
-                    Console.SetCursorPosition(0, Console.CursorTop);
+                    System.Threading.Thread.Sleep(600);
                     ClearCurrentConsoleLine();
                 }
                     
@@ -163,7 +162,7 @@ namespace bank_system
         /*
          * Method to clear a single line at the current cursor position.
          */
-        private static void ClearCurrentConsoleLine()
+        public static void ClearCurrentConsoleLine()
         {
             System.Threading.Thread.Sleep(1000);
             int cursorPos = Console.CursorTop;

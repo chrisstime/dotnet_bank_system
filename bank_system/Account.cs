@@ -35,28 +35,25 @@ namespace bank_system
                 user.PhoneNumber = FormHelper.ReadFormFieldNumber(cursorPosPhone);
                 user.Email = FormHelper.ReadFormFieldEmail(cursorPosEmail);
 
-                Console.Write("\nIs the information correct (y/n)? ");
-                int cursorPosLeftConfirm = Console.CursorLeft;
-                int cursorPosTopConfirm = Console.CursorTop;
+                //Console.Write("\nIs the information correct (y/n)? ");
+                //int cursorPosLeftConfirm = Console.CursorLeft;
+                //int cursorPosTopConfirm = Console.CursorTop;
 
-                Console.SetCursorPosition(cursorPosLeftConfirm, cursorPosTopConfirm);
-                string confirm = Console.ReadLine();
+                //Console.SetCursorPosition(cursorPosLeftConfirm, cursorPosTopConfirm);
+                bool confirm = Confirm("\nIs the information correct (y/n)? ");
                 
-                if (String.Equals(confirm.ToLower(), 'y'.ToString()))
+                if (confirm)
                 {
                     FileHelper.SerializeAccount(user);
                     FileHelper.SaveAccountCount(user.Id);
                     Console.WriteLine("\nAccount created successfully! Details will be provided via email.");
                     Console.WriteLine("Account number is: {0}", user.Id);
-                    System.Threading.Thread.Sleep(1500);
                     break;
                 }
-                else
-                {
-                    Console.WriteLine("Please enter 'y' or 'n' only.");
-                    System.Threading.Thread.Sleep(1000);
-                }
             } while(true);
+
+            Console.WriteLine("Returning to main menu...");
+            System.Threading.Thread.Sleep(1000);
         }
 
         /*
@@ -88,7 +85,7 @@ namespace bank_system
                 }
                 else
                 {
-                    Console.WriteLine("\nAccount does not exist. Please try again.");
+                    Console.WriteLine("\nAccount does not exist.");
                     System.Threading.Thread.Sleep(1000);
                 }
             }
@@ -100,7 +97,7 @@ namespace bank_system
         /*
          * Method for the search interface in the program.
          */
-        public User Search()
+        public User SearchAccountTo(string purpose)
         {
             _ = new User();
             User user;
@@ -108,24 +105,18 @@ namespace bank_system
             do
             {
                 Console.Clear();
-                user = AccountLookup("SEARCH AN ACCOUNT");
+                user = AccountLookup(purpose);
                 ViewAccount(user);
 
-                Console.Write("Search for another account (y/n) ? ");
-                string confirm = Console.ReadLine();
+                bool confirm = Confirm("Search for another account (y/n) ? ");
 
-                if (String.Equals(confirm.ToLower(), 'n'.ToString()))
-                {
+                if (!confirm)
                     break;
-                }
-                else if (!String.Equals(confirm.ToLower(), 'y'.ToString()))
-                {
-                    Console.WriteLine("Please enter 'y' or 'n' only.");
-                    System.Threading.Thread.Sleep(1000);
-
-                }
             }
             while (true);
+
+            Console.WriteLine("Returning to main menu...");
+            System.Threading.Thread.Sleep(1000);
 
             return user;
         }
@@ -139,24 +130,19 @@ namespace bank_system
 
             do
             {
-                User user = AccountLookup("DELETE AN ACCOUNT");
-                Console.WriteLine("Delete Account (y/n)? ");
-                string confirm = Console.ReadLine();
-                if (String.Equals(confirm.ToLower(), 'y'.ToString()))
+                User user = SearchAccountTo("DELETE AN ACCOUNT");
+                bool confirm = Confirm("Delete Account (y/n)? ");
+                if (confirm)
                 {
                     success = FileHelper.DeleteAccountFile(user.Id);
                     if (success)
                         Console.WriteLine("Account number {0} has been deleted", user.Id);
                 }
-                else
-                {
-                    Console.WriteLine("Please enter 'y' or 'n' only.");
-                    System.Threading.Thread.Sleep(1000);
-                }
-                System.Threading.Thread.Sleep(1000);
             }
             while (!success);
-            
+
+            Console.WriteLine("Returning to main menu...");
+            System.Threading.Thread.Sleep(1000);
         }
 
         /*
@@ -183,7 +169,7 @@ namespace bank_system
         public void Withdraw()
         {
             bool success = false;
-            User user = AccountLookup("WITHDRAW");
+            User user = SearchAccountTo("WITHDRAW");
 
             do
             {
@@ -207,11 +193,13 @@ namespace bank_system
                 {
                     user.Balance -= amount;
                     Console.WriteLine("\n\nWithdraw successful! The remaining balance for the user is: ${0}", user.Balance);
-                    success = FileHelper.SerializeAccount(AccountFileName(user.Id), user);
+                    success = FileHelper.SerializeAccount(user);
                 }
-                System.Threading.Thread.Sleep(1000);
             }
             while (!success);
+
+            Console.WriteLine("Returning to main menu...");
+            System.Threading.Thread.Sleep(1000);
         }
 
         /*
@@ -219,7 +207,7 @@ namespace bank_system
          */
         public void Deposit()
         {
-            User user = AccountLookup("DEPOSIT");
+            User user = SearchAccountTo("DEPOSIT");
 
             do
             {
@@ -232,14 +220,18 @@ namespace bank_system
 
                 string inputAmount = FormHelper.ReadFormFieldNumber(cursorPosAmount);
                 int amount = int.Parse(inputAmount);
-
                 user.Balance += amount;
-                Console.WriteLine("\n\nDeposit successful! The new balance for the user is: ${0}", user.Balance);
-                FileHelper.SerializeAccount(user);
-                System.Threading.Thread.Sleep(1000);
-                break;
+
+                if (FileHelper.SerializeAccount(user))
+                {
+                    Console.WriteLine("\n\nDeposit successful! The new balance for the user is: ${0}", user.Balance);
+                    break;
+                }
             }
             while (true);
+
+            Console.WriteLine("Returning to main menu...");
+            System.Threading.Thread.Sleep(1000);
         }
 
         /*
@@ -247,31 +239,41 @@ namespace bank_system
          */
         public void AcStatement()
         {
-            User user = AccountLookup("STATEMENT");
+            User user = SearchAccountTo("STATEMENT");
             ViewAccount(user);
-            Console.Write("Email statement (y/n) ? ");
-            string confirm = Console.ReadLine();
-            do
+
+            bool confirm = Confirm("Email statement (y/n) ? ");
+            if (confirm)
             {
-                if (String.Equals(confirm.ToLower(), 'y'.ToString()))
-                {
-                    Console.WriteLine("Statement sent to {0}. The email should arrive shortly.", user.Id);
-                    break;
-                }
-                else if (String.Equals(confirm.ToLower(), 'n'.ToString()))
-                {
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Please enter 'y' or 'n' only.");
-                }
+                Console.WriteLine("Statement sent to {0}. The email should arrive shortly.", user.Id);
             }
-            while (true);
 
             Console.WriteLine("Returning to main menu...");
             System.Threading.Thread.Sleep(1000);
+        }
 
+        private bool Confirm(string message)
+        {
+            do
+            {
+                Console.Write(message);
+                string confirm = Console.ReadLine();
+                FormHelper.ClearCurrentConsoleLine();
+                if (String.Equals(confirm.ToLower(), 'n'.ToString()))
+                {
+                    return false;
+                }
+                else if (String.Equals(confirm.ToLower(), 'y'.ToString()))
+                {
+                    return true;
+                }
+                else
+                {
+                    Console.Write("Please enter 'y' or 'n' only.");
+                    FormHelper.ClearCurrentConsoleLine();
+                }
+            }
+            while (true);
         }
     } 
 }
