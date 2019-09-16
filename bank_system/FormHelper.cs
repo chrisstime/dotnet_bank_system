@@ -5,44 +5,35 @@ using System.Globalization;
 namespace bank_system
 {
     /*
-     * Helper class to help with input validations.
+     * Helper class to help with input validations for the program.
      */
     class FormHelper
     {
-        public static bool Confirm(string yMessage, string nMessage)
-        {
-            string confirm = Console.ReadLine();
-
-            if (String.Equals(confirm.ToLower(), 'y'.ToString()))
-            {
-                Console.WriteLine(yMessage);
-                System.Threading.Thread.Sleep(750);
-                return true;
-            }
-            else if (String.Equals(confirm.ToLower(), 'n'.ToString()))
-            {
-                Console.WriteLine(nMessage);
-                System.Threading.Thread.Sleep(750);
-            }
-            else
-            {
-                Console.WriteLine("Please enter 'y' or 'n' only.");
-                System.Threading.Thread.Sleep(750);
-            }
-            return false;
-        }
-
+        /*
+         * Formfield method automatically formats an input field.
+         * Params: label of the field input as a string, an font style enum.
+         * Returns the cursor position of the beginning of the input field as an array of integer.
+         * cursorPos[0] represents the left cursor position and cursorPos[1] represents the top cursor position.
+         */
         public static int[] FormField(string formLabel, FontStyle fontStyle)
         {
+            // Add a dollar sign if the input field is for money.
             string formattedLabel = formLabel + (fontStyle == FontStyle.currency ? ": $" : ": ");
             Console.Write("║ ");
             int[] cursorPos = { Console.CursorLeft + formattedLabel.Length, Console.CursorTop };
+
+            // Pad the text right to make the box even.
             Console.Write(formattedLabel.PadRight(Constants.defaultFormLength));
             Console.WriteLine("║");
 
             return cursorPos;
         }
 
+        /*
+         * Read formfield method to read the line at a given cursor position.
+         * Params: integer array representing the cursor position to read from.
+         * Returns the read user input string.
+         */
         public static string ReadFormField(int[] cursorPos)
         {
             Console.SetCursorPosition(cursorPos[0], cursorPos[1]);
@@ -50,6 +41,11 @@ namespace bank_system
             return Console.ReadLine();
         }
 
+        /*
+         * Method to read a number input from a formfield. Prevents user from typing anything that isn't a number.
+         * Params: integer array representing the cursor position to read from.
+         * Returns the resulting user input string.
+         */
         public static string ReadFormFieldNumber(int[] cursorPos)
         {
             Console.SetCursorPosition(cursorPos[0], cursorPos[1]);
@@ -61,7 +57,7 @@ namespace bank_system
                 key = Console.ReadKey(true);
                 if (key.Key != ConsoleKey.Backspace)
                 {
-                    if (Char.IsNumber(key.KeyChar) && input.Length < 9)
+                    if (Char.IsNumber(key.KeyChar) && input.Length < 10)
                     {
                         input += key.KeyChar;
                         Console.Write(key.KeyChar);
@@ -81,9 +77,15 @@ namespace bank_system
             return input;
         }
 
+        /*
+         * Method to read and validate an email input.
+         * Params: integer array representing the cursor position to read from.
+         * Returns validate email string from user input.
+         */
         public static string ReadFormFieldEmail(int[] cursorPos)
         {
             string input;
+            // regex pattern for the email string.
             string pattern = "(.)+(@gmail.com | @uts.edu.au | @outlook.com)";
             Regex rg = new Regex(pattern, RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
 
@@ -102,6 +104,7 @@ namespace bank_system
                         "\nEmail must have an @ and must belong to gmail.com, " +
                         "outlook.com or uts.edu.au domain."
                         );
+                    System.Threading.Thread.Sleep(1500);
                     Console.SetCursorPosition(0, Console.CursorTop);
                     ClearCurrentConsoleLine();
                 }
@@ -112,6 +115,10 @@ namespace bank_system
             return input;
         }
 
+        /*
+         * Method for formatting heading for the bank program prints the result to consult.
+         * Params: string label for the heading, enum to specify the fontstyle.
+         */
         public static void Heading(string heading, FontStyle headingStyle)
         {
             int padding = Constants.defaultFormLength - heading.Length;
@@ -142,6 +149,10 @@ namespace bank_system
             }
         }
 
+        /*
+         * Method to format body text within the program form. 
+         * Params: text to print in body.
+         */
         public static void Body(string text)
         {
             Console.Write("║ ");
@@ -149,6 +160,9 @@ namespace bank_system
             Console.WriteLine("║");
         }
 
+        /*
+         * Method to clear a single line at the current cursor position.
+         */
         private static void ClearCurrentConsoleLine()
         {
             System.Threading.Thread.Sleep(1000);
@@ -158,6 +172,10 @@ namespace bank_system
             Console.SetCursorPosition(0, cursorPos);
         }
 
+        /*
+         * Method to draw the form outline for the program.
+         * Params: enum to specify what kind of outline to print.
+         */
         public static void DrawFormBox(FormBox formBox)
         {
             switch (formBox)
