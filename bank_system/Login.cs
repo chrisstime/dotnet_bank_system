@@ -88,7 +88,7 @@ namespace bank_system
                 string[] credentials = line.Split(delimeterChar);
                 allowAccess = String.Equals(credentials[0], userName) && String.Equals(credentials[1], passWord);
                 if (allowAccess)
-                    break;
+                    return allowAccess;
             }
 
             return allowAccess;
