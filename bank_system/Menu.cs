@@ -11,6 +11,9 @@ namespace bank_system
             accountManager = new Account();
         }
 
+        /*
+         * Method to print options for the menu screen.
+         */
         public void MenuScreen()
         {
             Console.Clear();
@@ -34,7 +37,8 @@ namespace bank_system
                 FormHelper.DrawFormBox(FormBox.footer);
 
                 string userInput = FormHelper.ReadFormField(cursorPosChoice);
-
+                
+                // Validate that input is an integer from 1-7.
                 if (!int.TryParse(userInput, out int choice))
                 {
                     Console.WriteLine("\n{0} is not an a number. Please input a number between 1-7.", userInput);
@@ -53,7 +57,11 @@ namespace bank_system
             }
             while (true);
         }
-
+        
+        /*
+         * Method call the appropriate function selected from the menu.
+         * Params: integer representing the user choice.
+         */
         private void MenuChoice(int userChoice)
         {
             switch (userChoice)

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace bank_system
 {
+    /*
+     * User object used for storing the user account details.
+     */
     [Serializable]
     class User
     {

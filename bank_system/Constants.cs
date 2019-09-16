@@ -7,16 +7,25 @@ using System.Threading.Tasks;
 
 namespace bank_system
 {
+    /*
+     * Formbox sections represented as an enum.
+     */
     public enum FormBox
     {
         header, footer, formDivider
     };
 
+    /*
+     * Text styles represented as an enum.
+     */
     public enum FontStyle
     {
         h1, h2, currency, label
     };
 
+    /*
+     * Constants values used for the program.
+     */
     class Constants
     {
         public static readonly string projectDir = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;

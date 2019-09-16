@@ -11,6 +11,9 @@ namespace bank_system
         private static Login myBankLogin;
         private static Menu menu;
 
+        /*
+         * Main method for the entire program.
+         */
         private static void Main()
         {
             myBankLogin = new Login();            
@@ -20,6 +23,7 @@ namespace bank_system
             FileHelper.CreateDirectory(Constants.accountsDir);
             bool loginSuccess;
 
+            // attempt login until credentials are correct.
             do
             {
                 loginSuccess = myBankLogin.LoginInterface();
