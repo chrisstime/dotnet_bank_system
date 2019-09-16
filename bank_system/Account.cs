@@ -110,12 +110,11 @@ namespace bank_system
                 else if (!String.Equals(confirm.ToLower(), 'y'.ToString()))
                 {
                     Console.WriteLine("Please enter 'y' or 'n' only.");
-                    System.Threading.Thread.Sleep(500);
+                    System.Threading.Thread.Sleep(1000);
 
                 }
             }
             while (true);
-
 
             return user;
         }
@@ -131,16 +130,16 @@ namespace bank_system
                 string confirm = Console.ReadLine();
                 if (String.Equals(confirm.ToLower(), 'y'.ToString()))
                 {
-                    
-                    Console.WriteLine("Account number {0} has been deleted", user.Id);
                     success = FileHelper.DeleteAccountFile(user.Id);
-                    System.Threading.Thread.Sleep(750);
+                    if (success)
+                        Console.WriteLine("Account number {0} has been deleted", user.Id);
                 }
                 else
                 {
                     Console.WriteLine("Please enter 'y' or 'n' only.");
-                    System.Threading.Thread.Sleep(750);
+                    System.Threading.Thread.Sleep(1000);
                 }
+                System.Threading.Thread.Sleep(1000);
             }
             while (!success);
             
@@ -181,16 +180,14 @@ namespace bank_system
                 if (amount > user.Balance)
                 {
                     Console.WriteLine("\n\nThe amount is greater than the balance. You may only withdraw less than or equal to the account balance.");
-                    System.Threading.Thread.Sleep(1000);
                 }
                 else
                 {
                     user.Balance -= amount;
                     Console.WriteLine("\n\nWithdraw successful! The remaining balance for the user is: ${0}", user.Balance);
-                    FileHelper.SerializeAccount(AccountFileName(user.Id), user);
-                    success = true;
-                    System.Threading.Thread.Sleep(1000);
+                    success = FileHelper.SerializeAccount(AccountFileName(user.Id), user);
                 }
+                System.Threading.Thread.Sleep(1000);
             }
             while (!success);
         }
@@ -231,7 +228,6 @@ namespace bank_system
                 if (String.Equals(confirm.ToLower(), 'y'.ToString()))
                 {
                     Console.WriteLine("Statement sent to {0}. The email should arrive shortly.", user.Id);
-                    System.Threading.Thread.Sleep(1000);
                     break;
                 }
                 else if (String.Equals(confirm.ToLower(), 'n'.ToString()))
@@ -241,10 +237,13 @@ namespace bank_system
                 else
                 {
                     Console.WriteLine("Please enter 'y' or 'n' only.");
-                    System.Threading.Thread.Sleep(750);
                 }
             }
             while (true);
+
+            Console.WriteLine("Returning to main menu...");
+            System.Threading.Thread.Sleep(1000);
+
         }
 
         private string AccountFileName(int userId)
