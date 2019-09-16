@@ -62,6 +62,7 @@ namespace bank_system
             do
             {
                 Console.Clear();
+
                 FormHelper.DrawFormBox(FormBox.header);
                 FormHelper.Heading(heading, FontStyle.h1);
                 FormHelper.Heading("ENTER THE DETAILS", FontStyle.h2);
@@ -95,7 +96,6 @@ namespace bank_system
 
             do
             {
-                Console.Clear();
                 int accountNumber = SearchAccountNumberTo("SEARCH AN ACCOUNT");
                 if(accountNumber != -1)
                 {
@@ -103,6 +103,7 @@ namespace bank_system
                     ViewAccount(user);
                     Console.WriteLine("Press any key to return to the main menu.");
                     Console.ReadKey();
+                    break;
                 }
                 else
                 {
@@ -175,13 +176,13 @@ namespace bank_system
          */
         public void Withdraw()
         {
+            bool success = false;
             do
             {
                 int accountNumber = SearchAccountNumberTo("WITHDRAW");
                 if (accountNumber != -1)
                 {
                     User user = FileHelper.DeserializeAccount(accountNumber);
-                    bool success = false;
 
                     do
                     {
@@ -208,6 +209,7 @@ namespace bank_system
                                 Console.WriteLine("\n\nWithdraw successful! The remaining balance for the user is: ${0}", user.Balance);
                                 success = FileHelper.SerializeAccount(user);
                             }
+                            System.Threading.Thread.Sleep(1000);
                         }
                         else
                         {
@@ -220,7 +222,7 @@ namespace bank_system
                 {
                     break;
                 }
-            } while (true);
+            } while (!success);
             
             Console.WriteLine("Returning to main menu...");
             System.Threading.Thread.Sleep(1000);
@@ -231,6 +233,7 @@ namespace bank_system
          */
         public void Deposit()
         {
+            bool success = false;
             do
             {
                 int accountNumber = SearchAccountNumberTo("DEPOSIT");
@@ -252,24 +255,25 @@ namespace bank_system
                         {
                             user.Balance += amount;
 
-                            if (FileHelper.SerializeAccount(user))
+                            if (success = FileHelper.SerializeAccount(user))
                             {
                                 Console.WriteLine("\n\nDeposit successful! The new balance for the user is: ${0}", user.Balance);
-                                break;
+                                System.Threading.Thread.Sleep(1000);
                             }
                         }
                         else
                         {
                             Console.WriteLine("Deposit unsuccessful. Please try again.");
                         }
+                        System.Threading.Thread.Sleep(1000);
                     }
-                    while (true);
+                    while (!success);
                 }
                 else
                 {
                     break;
                 }
-            } while (true);
+            } while (!success);
             
 
             Console.WriteLine("Returning to main menu...");

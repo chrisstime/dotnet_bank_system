@@ -67,7 +67,6 @@ namespace bank_system
          */
         public static bool SerializeAccount(User user)
         {
-            bool success = false;
             string newAccountFilePath = AccountPath(user.Id);
             try
             {
@@ -83,14 +82,14 @@ namespace bank_system
                 formatter.Serialize(stream, user);
                 stream.Close();
 
-                success =  true;
+                return true;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
 
-            return success;
+            return false;
         }
 
         /*
