@@ -188,6 +188,7 @@ namespace bank_system
                     {
                         Console.Clear();
 
+                        FormHelper.DrawFormBox(FormBox.header);
                         FormHelper.Heading("WITHDRAW", FontStyle.h1);
                         FormHelper.Heading("ENTER THE DETAILS", FontStyle.h2);
                         FormHelper.Body("Account No: " + user.Id);
@@ -245,6 +246,8 @@ namespace bank_system
                     do
                     {
                         Console.Clear();
+
+                        FormHelper.DrawFormBox(FormBox.header);
                         FormHelper.Heading("DEPOSIT", FontStyle.h1);
                         FormHelper.Heading("ENTER THE DETAILS", FontStyle.h2);
                         FormHelper.Body("Account No: " + user.Id);
