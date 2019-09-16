@@ -209,12 +209,13 @@ namespace bank_system
                                 Console.WriteLine("\n\nWithdraw successful! The remaining balance for the user is: ${0}", user.Balance);
                                 success = FileHelper.SerializeAccount(user);
                             }
-                            System.Threading.Thread.Sleep(1000);
                         }
                         else
                         {
                             Console.WriteLine("Deposit unsuccessful. Please try again.");
                         }
+
+                        System.Threading.Thread.Sleep(1000);
                     }
                     while (!success);
                 }
