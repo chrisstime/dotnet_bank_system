@@ -55,6 +55,7 @@ namespace bank_system
          * Method for looking up an account within the accounts directory.
          * Param: the title for the screen which describes the context on which the account is being searched, 
          *        i.e. searching if an account exists for deletion, deposit or withdrawal.
+         * Returns the accountNumber if it exists or -1 if it doesn't.
          */
         private int SearchAccountNumberTo(string heading)
         {
@@ -71,7 +72,6 @@ namespace bank_system
                 if (FileHelper.AccountExists(accountNumber))
                 {
                     Console.WriteLine("\nAccount found! Loading account file...");
-                    System.Threading.Thread.Sleep(500);
                     return accountNumber;
                 }
                 else
@@ -101,6 +101,8 @@ namespace bank_system
                 {
                     user = FileHelper.DeserializeAccount(accountNumber);
                     ViewAccount(user);
+                    Console.WriteLine("Press any key to return to the main menu.");
+                    Console.ReadKey();
                 }
                 else
                 {
