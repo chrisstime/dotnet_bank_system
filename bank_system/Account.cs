@@ -217,7 +217,7 @@ namespace bank_system
                         }
                         else
                         {
-                            Console.WriteLine("Deposit unsuccessful. Please try again.");
+                            Console.WriteLine("\n\nWithdrawal unsuccessful. Please enter a value.");
                         }
 
                         System.Threading.Thread.Sleep(1000);
@@ -271,7 +271,7 @@ namespace bank_system
                         }
                         else
                         {
-                            Console.WriteLine("Deposit unsuccessful. Please try again.");
+                            Console.WriteLine("\n\nDeposit unsuccessful. Please enter a value.");
                         }
                         System.Threading.Thread.Sleep(1000);
                     }
