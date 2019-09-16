@@ -1,4 +1,9 @@
-﻿using System;
+﻿/*
+ * 31927 Application Development with .NET - Assignment 1
+ * Author: Christine Vinaviles
+ * Student No. 11986282
+ */
+using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;

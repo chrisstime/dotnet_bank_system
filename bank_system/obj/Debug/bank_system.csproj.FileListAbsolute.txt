@@ -14,3 +14,11 @@ D:\Repos\dotnet_bank_system\bank_system\obj\Debug\bank_system.csprojAssemblyRefe
 D:\Repos\dotnet_bank_system\bank_system\obj\Debug\bank_system.csproj.CoreCompileInputs.cache
 D:\Repos\dotnet_bank_system\bank_system\obj\Debug\bank_system.exe
 D:\Repos\dotnet_bank_system\bank_system\obj\Debug\bank_system.pdb
+C:\Users\Christine Grace\Desktop\dotnet_bank_system\bank_system\bin\Debug\login.txt
+C:\Users\Christine Grace\Desktop\dotnet_bank_system\bank_system\bin\Debug\bank_system.exe.config
+C:\Users\Christine Grace\Desktop\dotnet_bank_system\bank_system\bin\Debug\bank_system.exe
+C:\Users\Christine Grace\Desktop\dotnet_bank_system\bank_system\bin\Debug\bank_system.pdb
+C:\Users\Christine Grace\Desktop\dotnet_bank_system\bank_system\obj\Debug\bank_system.csprojAssemblyReference.cache
+C:\Users\Christine Grace\Desktop\dotnet_bank_system\bank_system\obj\Debug\bank_system.csproj.CoreCompileInputs.cache
+C:\Users\Christine Grace\Desktop\dotnet_bank_system\bank_system\obj\Debug\bank_system.exe
+C:\Users\Christine Grace\Desktop\dotnet_bank_system\bank_system\obj\Debug\bank_system.pdb

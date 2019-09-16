@@ -1,5 +1,9 @@
-﻿using System;
-using System.IO;
+﻿/*
+ * 31927 Application Development with .NET - Assignment 1
+ * Author: Christine Vinaviles
+ * Student No. 11986282
+ */
+using System;
 
 namespace bank_system
 {
@@ -68,16 +72,16 @@ namespace bank_system
                 FormHelper.Heading("ENTER THE DETAILS", FontStyle.h2);
                 int[] cursorPosInput = FormHelper.FormField("Search for Account Number", FontStyle.label);
                 FormHelper.DrawFormBox(FormBox.footer);
-                int.TryParse(FormHelper.ReadFormField(cursorPosInput), out int accountNumber);
+                int.TryParse(FormHelper.ReadFormFieldNumber(cursorPosInput), out int accountNumber);
 
                 if (FileHelper.AccountExists(accountNumber))
                 {
-                    Console.WriteLine("\nAccount found! Loading account file...");
+                    Console.WriteLine("\n\nAccount found! Loading account file...");
                     return accountNumber;
                 }
                 else
                 {
-                    Console.WriteLine("\nAccount does not exist.");
+                    Console.WriteLine("\n\nAccount does not exist.");
                     bool searchAgain = Confirm("Search for another account (y/n) ? ");
                     if (!searchAgain)
                         return -1;
@@ -313,6 +317,11 @@ namespace bank_system
             System.Threading.Thread.Sleep(1000);
         }
 
+        /*
+         * Method for reading 'y' and 'n' user input for confirmation.
+         * Params: message / question string
+         * Returns a boolean for 'y' and 'n' as true or false respectively.
+         */
         private bool Confirm(string message)
         {
             do

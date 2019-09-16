@@ -1,0 +1,7 @@
+Please run the .exe file in the dotnet_bank_system/bank_system/bin/Debug folder after code has been compiled at least once
+or via visual studio (by clicking on Start button).
+
+Note:
+There are sleep times throughout the program to allow the user ample time to read the messaging in the program, 
+please allow at least one second for the program to move to the next stage after a message is shown.
+The program also assumes balance, deposit and withdrawal will be in whole numbers (the exact nature was not specified in the assignment specifications).
