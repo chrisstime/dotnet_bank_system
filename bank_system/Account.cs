@@ -300,8 +300,8 @@ namespace bank_system
                     if (emailStatement)
                     {
                         Console.WriteLine("Statement sent to {0}. The email should arrive shortly.", user.Id);
-                        break;
                     }
+                    break;
                 }
                 else
                 {
