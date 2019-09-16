@@ -6,6 +6,10 @@ namespace bank_system
     {
         string userName, passWord;
 
+        /*
+         * Method for the login interface.
+         * Returns a boolean to indicate successful user login.
+         */
         public bool LoginInterface()
         {
             do
@@ -27,6 +31,7 @@ namespace bank_system
 
                 string passwdChar = "*";
 
+                // keep converting the characters into * until user presses enter.
                 do
                 {
                     ConsoleKeyInfo Key = Console.ReadKey(true);
@@ -67,6 +72,11 @@ namespace bank_system
             return Authenticate(userName, passWord);
         }
 
+        /*
+         * Method to authenticate username and password input against the login text file.
+         * Params: the username and password entered by the user.
+         * Returns a boolean to indicate whether or not the entered username and password matched any pairs from the file.
+         */
         private bool Authenticate(string userName, string passWord)
         {
             string[] fileContent = FileHelper.ReadFile("login.txt");

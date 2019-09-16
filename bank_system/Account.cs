@@ -5,6 +5,9 @@ namespace bank_system
 {
     class Account
     {
+        /*
+         * Method to create an account.
+         */
         public void CreateAccount()
         {
             User user = new User();
@@ -25,13 +28,13 @@ namespace bank_system
 
                 FormHelper.DrawFormBox(FormBox.footer);
 
+                // set cursor position and read user inputs for the forms.
                 user.FName = FormHelper.ReadFormField(cursorPosFName);
                 user.LName = FormHelper.ReadFormField(cursorPosLName);
                 user.Address = FormHelper.ReadFormField(cursorPosAddress);
                 user.PhoneNumber = FormHelper.ReadFormFieldNumber(cursorPosPhone);
                 user.Email = FormHelper.ReadFormFieldEmail(cursorPosEmail);
 
-                
                 Console.Write("\nIs the information correct (y/n)? ");
                 int cursorPosLeftConfirm = Console.CursorLeft;
                 int cursorPosTopConfirm = Console.CursorTop;
@@ -51,11 +54,16 @@ namespace bank_system
                 else
                 {
                     Console.WriteLine("Please enter 'y' or 'n' only.");
-                    System.Threading.Thread.Sleep(500);
+                    System.Threading.Thread.Sleep(1000);
                 }
             } while(true);
         }
 
+        /*
+         * Method for looking up an account within the accounts directory.
+         * Param: the title for the screen which describes the context on which the account is being searched, 
+         *        i.e. searching if an account exists for deletion, deposit or withdrawal.
+         */
         private User AccountLookup(string heading)
         {
             _ = new User();
@@ -89,6 +97,9 @@ namespace bank_system
             return user;
         }
 
+        /*
+         * Method for the search interface in the program.
+         */
         public User Search()
         {
             _ = new User();
@@ -120,6 +131,9 @@ namespace bank_system
             return user;
         }
 
+        /*
+         * Method to delete an account.
+         */
         public void DeleteAccount()
         {
             bool success = false;
@@ -146,6 +160,10 @@ namespace bank_system
             
         }
 
+        /*
+         * Method to print the account details of an account.
+         * Param: user object.
+         */
         private void ViewAccount(User user)
         {
             FormHelper.DrawFormBox(FormBox.header);
@@ -160,6 +178,9 @@ namespace bank_system
             FormHelper.DrawFormBox(FormBox.footer);
         }
 
+        /*
+         * Method to withdraw money from an account, provided that they have sufficient balance.
+         */
         public void Withdraw()
         {
             bool success = false;
@@ -178,6 +199,7 @@ namespace bank_system
                 string inputAmount = FormHelper.ReadFormFieldNumber(cursorPosAmount);
                 int amount = int.Parse(inputAmount);
                 
+                // Only allow withdrawal if the amount being withdrawn is greater than or equal to the account balance.
                 if (amount > user.Balance)
                 {
                     Console.WriteLine("\n\nThe amount is greater than the balance. You may only withdraw less than or equal to the account balance.");
@@ -195,6 +217,9 @@ namespace bank_system
             while (!success);
         }
 
+        /*
+         * Method for depositing values into an account.
+         */
         public void Deposit()
         {
             User user = AccountLookup("DEPOSIT");
@@ -220,6 +245,9 @@ namespace bank_system
             while (true);
         }
 
+        /*
+         * Screen for searching and displaying the account statement for an existing account.
+         */
         public void AcStatement()
         {
             User user = AccountLookup("STATEMENT");
